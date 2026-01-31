@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://d1kabimw2w3fc"]
+
+[ext_resource type="PackedScene" uid="uid://bsk5loftgehxn" path="res://scene/weapon/weapon.tscn" id="1_swarl"]
+
+[node name="LaserGun" instance=ExtResource("1_swarl")]
+fire_rate = 0.2
+spread_angle = 0.0

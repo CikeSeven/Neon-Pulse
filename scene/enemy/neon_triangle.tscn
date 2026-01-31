@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://du7e4bjdtkqg0"]
+
+[ext_resource type="PackedScene" uid="uid://df8dl6txho4t5" path="res://scene/enemy/enemy.tscn" id="1_0tml4"]
+
+[node name="NeonTriangle" unique_id=484942154 instance=ExtResource("1_0tml4")]
+
+[node name="Polygon2D" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="0" unique_id=524099288]
+modulate = Color(1.5720325, 0, 1.5720325, 1)
+position = Vector2(5, 0)
+color = Color(1.5720325, 0, 1.5720325, 1)
+polygon = PackedVector2Array(-45, 0, 20, -36, 20, 36)
+
+[node name="Hurtbox" parent="." index="1" unique_id=1293090469]
+collision_layer = 32
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hurtbox" index="0" unique_id=226521950]
+position = Vector2(5, 0)
+polygon = PackedVector2Array(-45, 0, 20, -36, 20, 36)
+
+[node name="Hitbox" parent="." index="2" unique_id=1151360192]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox" index="0" unique_id=770549313]
+position = Vector2(5, 0)
+polygon = PackedVector2Array(-45, 0, 20, -36, 20, 36)
+
+[node name="VisibleOnScreenNotifier2D" parent="." index="3" unique_id=1246620138]
+rect = Rect2(-40, -26, 65, 52)

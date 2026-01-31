@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://fmvxy1cn6xfv"]
+
+[ext_resource type="PackedScene" uid="uid://bjxtkmvoqglyj" path="res://scene/bullet/bullet.tscn" id="1_br1ca"]
+
+[sub_resource type="Gradient" id="Gradient_br1ca"]
+offsets = PackedFloat32Array(0, 0.29608938, 0.54469275, 0.9357542)
+colors = PackedColorArray(1.536, 0.352, 0.357, 0, 2.454227, 0.5873668, 0.5943571, 1, 1.6197081, 0.37372842, 0.37839383, 1, 0.40724128, 1.353256, 1.2506721, 1)
+
+[node name="AkBullet" unique_id=1906439511 instance=ExtResource("1_br1ca")]
+lifetime = 8.0
+
+[node name="Trail" parent="Node" parent_id_path=PackedInt32Array(950500505) index="0" unique_id=1522654685]
+position = Vector2(-13, 0)
+width = 25.0
+default_color = Color(0.50350213, 1.6465226, 1.5225757, 1)
+gradient = SubResource("Gradient_br1ca")
+antialiased = true
+pointCount = 2
+
+[node name="Visuals" type="Polygon2D" parent="." index="1" unique_id=2056701438]
+modulate = Color(0.43472764, 1.4369954, 1.3290025, 1)
+scale = Vector2(3.1796873, 3.1796875)
+color = Color(0.43472764, 1.4369954, 1.3290025, 1)
+antialiased = true
+polygon = PackedVector2Array(4, 0, -8, -3, -3.773956, 0, -8, 3)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox" parent_id_path=PackedInt32Array(855520787) index="0" unique_id=1885055603]
+polygon = PackedVector2Array(13, 0, -25, -10, -25, 10)

@@ -1,0 +1,63 @@
+[gd_scene load_steps=4 format=3 uid="uid://cqf0du4og0s4m"]
+
+[ext_resource type="PackedScene" uid="uid://bo43bt24peuwe" path="res://scene/player.tscn" id="1_pjass"]
+
+[sub_resource type="Environment" id="Environment_pjass"]
+background_mode = 3
+glow_enabled = true
+glow_blend_mode = 0
+
+[sub_resource type="Curve" id="Curve_pjass"]
+_data = [Vector2(0, 0.0034325123), 0.0, 0.0, 0, 0, Vector2(0.16666666, 1), 0.0, 0.0, 0, 0, Vector2(0.6967213, 0.992563), 0.0, 0.0, 0, 0, Vector2(0.99453557, 0.0034325123), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[node name="World" type="Node2D"]
+position = Vector2(0, -5)
+
+[node name="Roads" type="Node2D" parent="."]
+
+[node name="Road1" type="Line2D" parent="Roads"]
+points = PackedVector2Array(-99999, 100, 9999999, 100)
+width = 6.0
+default_color = Color(1.4483985, 1.0014144, 1.5720325, 1)
+
+[node name="Road2" type="Line2D" parent="Roads"]
+points = PackedVector2Array(-999, 200, 9999999, 200)
+width = 6.0
+default_color = Color(1.4483985, 1.0014144, 1.5720325, 1)
+
+[node name="Road3" type="Line2D" parent="Roads/Road2"]
+points = PackedVector2Array(-999, 300, 9999999, 300)
+width = 6.0
+default_color = Color(1.4483985, 1.0014144, 1.5720325, 1)
+
+[node name="Player" parent="." instance=ExtResource("1_pjass")]
+position = Vector2(-300, 200)
+speed_x = null
+lane_y_positions = null
+limit_left = null
+limit_right = null
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_pjass")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, 200)
+zoom = Vector2(0.4, 0.4)
+
+[node name="BackgroundDust" type="CPUParticles2D" parent="."]
+z_index = -1
+position = Vector2(0, 200)
+amount = 40
+lifetime = 15.0
+preprocess = 10.0
+emission_shape = 3
+emission_rect_extents = Vector2(600, 400)
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 20.0
+initial_velocity_max = 50.0
+scale_amount_min = 2.0
+scale_amount_max = 3.0
+scale_amount_curve = SubResource("Curve_pjass")

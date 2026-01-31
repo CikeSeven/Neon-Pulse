@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://bsk5loftgehxn"]
+
+[ext_resource type="Script" uid="uid://qewklbqf1wdc" path="res://script/weapon/weapon.gd" id="1_4iy3y"]
+[ext_resource type="PackedScene" uid="uid://fmvxy1cn6xfv" path="res://scene/bullet/ak_bullet.tscn" id="2_mwrhg"]
+
+[node name="Weapon" type="Node2D" unique_id=2115089063]
+script = ExtResource("1_4iy3y")
+bullet_scene = ExtResource("2_mwrhg")
+
+[node name="CooldownTimer" type="Timer" parent="." unique_id=1223365940]
+
+[node name="Muzzle" type="Marker2D" parent="." unique_id=874875537]

@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://bjxtkmvoqglyj"]
+
+[ext_resource type="Script" uid="uid://cbv6q0mgj610m" path="res://script/weapon/bullet.gd" id="1_ptxjj"]
+[ext_resource type="Script" uid="uid://4n44chwj6c4e" path="res://script/weapon/bullet_trail.gd" id="2_h8gla"]
+[ext_resource type="Script" uid="uid://djf7d3bm237ab" path="res://script/Hitbox.gd" id="3_05px5"]
+
+[sub_resource type="Curve" id="Curve_h8gla"]
+_data = [Vector2(0, 0.42283303), 0.0, 0.0, 0, 0, Vector2(1e-05, 0.83509517), 0.0, 0.0, 0, 0, Vector2(0.8333334, 0.6357143), -0.97199994, -5.1545434, 0, 0, Vector2(1, 0), -4.0500064, 0.0, 0, 0]
+point_count = 4
+
+[node name="Bullet" type="Node2D" unique_id=2054192315 groups=["player"]]
+z_index = 1
+script = ExtResource("1_ptxjj")
+
+[node name="Node" type="Node" parent="." unique_id=950500505]
+
+[node name="Trail" type="Line2D" parent="Node" unique_id=1522654685]
+width_curve = SubResource("Curve_h8gla")
+script = ExtResource("2_h8gla")
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=855520787]
+collision_layer = 0
+collision_mask = 32
+script = ExtResource("3_05px5")
+metadata/_custom_type_script = "uid://djf7d3bm237ab"

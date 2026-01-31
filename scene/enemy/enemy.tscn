@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://df8dl6txho4t5"]
+
+[ext_resource type="Script" uid="uid://qy42mvi63vjg" path="res://script/enemy/enemy.gd" id="1_yijav"]
+[ext_resource type="Script" uid="uid://tw62ron1anle" path="res://script/Hurtbox.gd" id="2_msiye"]
+[ext_resource type="Script" uid="uid://djf7d3bm237ab" path="res://script/Hitbox.gd" id="3_tu2m7"]
+
+[node name="Enemy" type="Node2D" unique_id=484942154 groups=["enemies"]]
+script = ExtResource("1_yijav")
+
+[node name="Visuals" type="Node2D" parent="." unique_id=1940419865]
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1293090469]
+collision_layer = 0
+script = ExtResource("2_msiye")
+metadata/_custom_type_script = "uid://tw62ron1anle"
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=1151360192]
+script = ExtResource("3_tu2m7")
+metadata/_custom_type_script = "uid://djf7d3bm237ab"
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1246620138]

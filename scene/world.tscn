@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://cqf0du4og0s4m"]
+
+[ext_resource type="PackedScene" uid="uid://bo43bt24peuwe" path="res://scene/player.tscn" id="1_pjass"]
+[ext_resource type="PackedScene" uid="uid://b2y28pdsel1dd" path="res://scene/enemy_spawner.tscn" id="2_txmk2"]
+
+[sub_resource type="Environment" id="Environment_pjass"]
+background_mode = 3
+glow_enabled = true
+glow_blend_mode = 0
+
+[sub_resource type="Curve" id="Curve_pjass"]
+_data = [Vector2(0, 0.0034325123), 0.0, 0.0, 0, 0, Vector2(0.16666666, 1), 0.0, 0.0, 0, 0, Vector2(0.6967213, 0.992563), 0.0, 0.0, 0, 0, Vector2(0.99453557, 0.0034325123), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[node name="World" type="Node2D" unique_id=1935701995]
+position = Vector2(0, -5)
+
+[node name="Roads" type="Node2D" parent="." unique_id=436753134]
+
+[node name="Road1" type="Line2D" parent="Roads" unique_id=2004082022]
+points = PackedVector2Array(-99999, -200, 10000000000, -200)
+width = 12.0
+default_color = Color(1.284, 0.885, 1.395, 1)
+
+[node name="Road2" type="Line2D" parent="Roads" unique_id=533766847]
+points = PackedVector2Array(-100000000, 0, 10000000000, 0)
+width = 12.0
+default_color = Color(1.2842197, 0.8853927, 1.3945211, 1)
+
+[node name="Road3" type="Line2D" parent="Roads" unique_id=2046675089]
+points = PackedVector2Array(-100000000, 200, 10000000000, 200)
+width = 12.0
+default_color = Color(1.2842197, 0.8853927, 1.3945211, 1)
+
+[node name="Player" parent="." unique_id=91002039 instance=ExtResource("1_pjass")]
+position = Vector2(-480, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1822367991]
+environment = SubResource("Environment_pjass")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1756634915]
+
+[node name="BackgroundDust" type="CPUParticles2D" parent="." unique_id=679962563]
+z_index = -1
+amount = 50
+lifetime = 20.0
+preprocess = 10.0
+emission_shape = 3
+emission_rect_extents = Vector2(1200, 900)
+direction = Vector2(-1, 0)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 15.0
+initial_velocity_max = 30.0
+scale_amount_min = 3.0
+scale_amount_max = 5.0
+scale_amount_curve = SubResource("Curve_pjass")
+
+[node name="EnemySpawner" parent="." unique_id=1308706498 instance=ExtResource("2_txmk2")]
+position = Vector2(0.5545654, 5.225708)

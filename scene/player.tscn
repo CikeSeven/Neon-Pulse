@@ -1,0 +1,89 @@
+[gd_scene format=3 uid="uid://bo43bt24peuwe"]
+
+[ext_resource type="Script" uid="uid://bi8fic70i3wnt" path="res://script/player.gd" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://dyp7lcrobcjox" path="res://script/color_rect.gd" id="2_hjaqi"]
+[ext_resource type="PackedScene" uid="uid://bbbf1vbbnqx46" path="res://scene/weapon/weapon_manager.tscn" id="3_fvtld"]
+[ext_resource type="Script" uid="uid://tw62ron1anle" path="res://script/Hurtbox.gd" id="4_ct4mp"]
+
+[sub_resource type="Curve" id="Curve_fvtld"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_hjaqi"]
+_data = [Vector2(0.0034482777, 1), 0.0, 0.0, 0, 0, Vector2(0.9965518, 0.03405571), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s4jxa"]
+size = Vector2(80, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ct4mp"]
+size = Vector2(80, 80)
+
+[node name="Player" type="CharacterBody2D" unique_id=774748420]
+collision_layer = 2
+script = ExtResource("1_4flbx")
+
+[node name="ImpactBurst" type="CPUParticles2D" parent="." unique_id=1438059858 groups=["player"]]
+modulate = Color(2.221, 0.745, 0.581, 1)
+position = Vector2(-39, 0)
+emitting = false
+amount = 25
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+emission_shape = 3
+emission_rect_extents = Vector2(1, 24)
+direction = Vector2(-1, 0)
+spread = 40.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 180.0
+initial_velocity_max = 200.0
+scale_amount_min = 12.0
+scale_amount_max = 14.0
+scale_amount_curve = SubResource("Curve_fvtld")
+
+[node name="NeonTrail" type="CPUParticles2D" parent="." unique_id=946810932]
+modulate = Color(1.8247963, 0.5908752, 0.4661066, 1)
+position = Vector2(-36, 0)
+amount = 50
+lifetime = 0.8
+emission_shape = 3
+emission_rect_extents = Vector2(1, 12)
+direction = Vector2(-1, 0)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 200.0
+initial_velocity_max = 220.0
+scale_amount_min = 10.0
+scale_amount_max = 12.0
+scale_amount_curve = SubResource("Curve_hjaqi")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2064506397]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("2_hjaqi")
+
+[node name="WeaponManager" parent="." unique_id=1564347148 instance=ExtResource("3_fvtld")]
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=400433912]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("4_ct4mp")
+metadata/_custom_type_script = "uid://tw62ron1anle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=583232854]
+shape = SubResource("RectangleShape2D_s4jxa")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=417993319]
+shape = SubResource("RectangleShape2D_ct4mp")
