@@ -18,6 +18,7 @@ var is_changing_lane: bool = false   ## 是否正在换道中
 var impact_has_triggered: bool = false ## 防止一次换道触发多次爆炸
 var move_direction: int = 0          ## 记录移动方向 (1=下, -1=上)
 
+
 func _ready() -> void:
 	Global.player_ref = self
 
