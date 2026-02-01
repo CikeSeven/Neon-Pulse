@@ -2,10 +2,11 @@
 
 [ext_resource type="Script" uid="uid://c2uwqn1845kbn" path="res://script/enemy/enemy_spawner.gd" id="1_hgipb"]
 [ext_resource type="PackedScene" uid="uid://du7e4bjdtkqg0" path="res://scene/enemy/neon_triangle.tscn" id="2_1aeu8"]
+[ext_resource type="PackedScene" path="res://scene/enemy/charger.tscn" id="3_8dah6"]
 
 [node name="EnemySpawner" type="Node2D" unique_id=1308706498]
 script = ExtResource("1_hgipb")
-enemy_scenes = Array[PackedScene]([ExtResource("2_1aeu8")])
+enemy_scenes = Array[PackedScene]([ExtResource("2_1aeu8"), ExtResource("3_8dah6")])
 
 [node name="SpawnTimer" type="Timer" parent="." unique_id=365701904]
 wait_time = 4.0

@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://y3tg6n1k6rhc"]
+
+[ext_resource type="PackedScene" uid="uid://df8dl6txho4t5" path="res://scene/enemy/enemy.tscn" id="1_enemy"]
+[ext_resource type="Script" uid="uid://cf4ql5dyi2ce4" path="res://script/enemy/charger.gd" id="2_charger"]
+
+[node name="Charger" unique_id=484942154 instance=ExtResource("1_enemy")]
+script = ExtResource("2_charger")
+detection_range = 600.0
+windup_duration = 0.8
+charge_speed = 800.0
+charge_color = Color(3, 1.5, 0.3, 1)
+speed = 100.0
+max_hp = 50.0
+contact_damage = 20.0
+
+[node name="Body" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="0" unique_id=1303099209]
+modulate = Color(3, 1.2, 0.2, 1)
+color = Color(3, 1.2, 0.2, 1)
+polygon = PackedVector2Array(-50, 0, 10, -30, 30, -20, 30, 20, 10, 30)
+
+[node name="Spike" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="1" unique_id=537652741]
+modulate = Color(4, 0.5, 0.1, 1)
+position = Vector2(-50, 0)
+color = Color(4, 0.5, 0.1, 1)
+polygon = PackedVector2Array(0, -15, -25, 0, 0, 15)
+
+[node name="Hurtbox" parent="." index="1" unique_id=1293090469]
+collision_layer = 32
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hurtbox" index="0" unique_id=50753611]
+polygon = PackedVector2Array(-75, 0, 10, -30, 30, -20, 30, 20, 10, 30)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox" parent_id_path=PackedInt32Array(1151360192) index="0" unique_id=1959091120]
+polygon = PackedVector2Array(-75, 0, 10, -30, 30, -20, 30, 20, 10, 30)
+
+[node name="VisibleOnScreenNotifier2D" parent="." index="3" unique_id=1246620138]
+rect = Rect2(-80, -35, 115, 70)
