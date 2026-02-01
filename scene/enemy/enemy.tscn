@@ -15,6 +15,8 @@ script = ExtResource("2_msiye")
 metadata/_custom_type_script = "uid://tw62ron1anle"
 
 [node name="Hitbox" type="Area2D" parent="." unique_id=1151360192]
+collision_layer = 0
+collision_mask = 8
 script = ExtResource("3_tu2m7")
 metadata/_custom_type_script = "uid://djf7d3bm237ab"
 

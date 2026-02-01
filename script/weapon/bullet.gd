@@ -4,10 +4,12 @@ class_name Bullet extends Node2D
 @export var speed: float = 1200
 ## 子弹基础伤害
 @export var damage: float = 6
+## 子弹击退强度
+@export var knockback: float = 30.0
 ## 子弹存活时间
 @export var lifetime: float = 15.0
 ## 能穿透多少敌人
-@export var penetration_times: int = 1 
+@export var penetration_times: int = 1
 
 
 @onready var hitbox: Hitbox = $Hitbox
@@ -16,6 +18,7 @@ func _ready() -> void:
 	# 设置自动销毁计时器（防止飞出屏幕太远不销毁的兜底策略）
 	get_tree().create_timer(lifetime).timeout.connect(queue_free)
 	hitbox.damage = damage
+	hitbox.knockback = knockback
 	hitbox.hit.connect(_on_hitbox_hit)
 
 func _physics_process(delta: float) -> void:
