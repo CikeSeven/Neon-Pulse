@@ -19,6 +19,11 @@ var current_hp: float
 var is_hit_frozen: bool = false ## 是否处于受击顿帧
 var original_speed: float
 
+## 血条组件
+var hp_bar: ProgressBar
+var hp_bar_bg: ColorRect
+var hp_label: Label
+
 func _ready() -> void:
 	current_hp = max_hp
 	original_speed = speed
@@ -36,10 +41,80 @@ func _ready() -> void:
 	add_child(notifier)
 	notifier.screen_exited.connect(queue_free)
 
+	# 创建血条
+	_create_hp_bar()
+
 func _physics_process(delta: float) -> void:
 	if is_hit_frozen:
 		return
 	position.x -= speed * delta
+
+## 创建血条
+func _create_hp_bar() -> void:
+	# 血条容器
+	var container = Node2D.new()
+	container.name = "HPBarContainer"
+	add_child(container)
+	container.position = Vector2(0, -60)  # 在敌人上方
+
+	# 血条背景 (暗色)
+	hp_bar_bg = ColorRect.new()
+	hp_bar_bg.size = Vector2(60, 8)
+	hp_bar_bg.position = Vector2(-30, 0)
+	hp_bar_bg.color = Color(0.2, 0.2, 0.2, 0.8)
+	container.add_child(hp_bar_bg)
+
+	# 血条前景
+	hp_bar = ProgressBar.new()
+	hp_bar.size = Vector2(60, 8)
+	hp_bar.position = Vector2(-30, 0)
+	hp_bar.max_value = max_hp
+	hp_bar.value = current_hp
+	hp_bar.show_percentage = false
+
+	# 自定义样式
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.0, 1.0, 0.5, 1.0)  # 霓虹绿
+	style.set_corner_radius_all(2)
+	style.content_margin_left = 2.0
+	style.content_margin_right = 2.0
+	style.content_margin_top = 1.0
+	style.content_margin_bottom = 1.0
+
+	hp_bar.add_theme_stylebox_override("fill", style)
+	# 移除边框让样式更干净
+	hp_bar.add_theme_constant_override("border", 0)
+
+	container.add_child(hp_bar)
+
+	# 添加数值标签
+	hp_label = Label.new()
+	hp_label.name = "HPBarLabel"
+	hp_label.text = str(int(current_hp)) + "/" + str(int(max_hp))
+	hp_label.add_theme_font_size_override("font_size", 18)
+	hp_label.add_theme_color_override("font_color", Color.WHITE)
+	hp_label.add_theme_color_override("outline_color", Color.BLACK)
+	hp_label.add_theme_constant_override("outline_size", 2)
+	hp_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hp_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	# 居中显示在血条上方
+	hp_label.position = Vector2(-30, -20) # 调整位置到血条上方
+	hp_label.size = Vector2(60, 20)
+	container.add_child(hp_label)
+
+## 更新血条显示
+func _update_hp_bar() -> void:
+	if hp_bar:
+		hp_bar.value = current_hp
+		# 血量低于30%变红
+		if current_hp / max_hp < 0.3:
+			var style = hp_bar.get_theme_stylebox("fill")
+			if style:
+				style.bg_color = Color(1.0, 0.2, 0.2, 1.0)  # 红色
+
+	# 更新数值文本
+	if hp_label:
+		hp_label.text = str(int(current_hp))
 
 ## 受击回调函数
 func _on_hurtbox_hurt(attacker_hitbox: Hitbox) -> void:
@@ -52,6 +127,9 @@ func _on_hurtbox_hurt(attacker_hitbox: Hitbox) -> void:
 func take_damage(amount: float, knockback_dir: Vector2 = Vector2.RIGHT, knockback_amount: float = -1.0) -> void:
 	current_hp -= amount
 	print("%s took %s damage. HP: %s" % [name, amount, current_hp])
+
+	# 更新血条
+	_update_hp_bar()
 
 	# 使用传入的击退值，如果为-1则使用默认值
 	var actual_knockback = knockback_amount if knockback_amount >= 0 else knockback_strength
@@ -86,12 +164,19 @@ func spawn_hit_particles() -> void:
 	particles.one_shot = true
 	particles.explosiveness = 1.0
 	particles.amount = 12
-	particles.lifetime = 0.4
+	particles.lifetime = 0.5
 
 	# 粒子外观 - 霓虹火花
 	particles.modulate = Color(0.5, 2.0, 3.0, 1.0)  # 青色霓虹
 	particles.scale_amount_min = 4.0
 	particles.scale_amount_max = 8.0
+
+	# 粒子由大到小消散
+	var curve = Curve.new()
+	curve.add_point(Vector2(0.0, 1.0))  # 开始时满尺寸
+	curve.add_point(Vector2(0.7, 0.5))  # 中间缩小
+	curve.add_point(Vector2(1.0, 0.0))  # 结束时消失
+	particles.scale_amount_curve = curve
 
 	# 粒子运动
 	particles.direction = Vector2.ZERO
@@ -132,6 +217,11 @@ func _end_hit_freeze() -> void:
 
 ## 死亡处理
 func die() -> void:
+	# 清理血条
+	var hp_container = get_node_or_null("HPBarContainer")
+	if hp_container:
+		hp_container.queue_free()
+
 	spawn_death_particles()
 	queue_free()
 
@@ -143,12 +233,19 @@ func spawn_death_particles() -> void:
 	particles.one_shot = true
 	particles.explosiveness = 1.0
 	particles.amount = 30
-	particles.lifetime = 0.6
+	particles.lifetime = 0.8
 
 	# 粒子外观 - 霓虹爆炸
 	particles.modulate = Color(0.5, 2.5, 4.0, 1.0)  # 亮青色
 	particles.scale_amount_min = 6.0
 	particles.scale_amount_max = 12.0
+
+	# 粒子由大到小消散
+	var curve = Curve.new()
+	curve.add_point(Vector2(0.0, 1.0))  # 开始时满尺寸
+	curve.add_point(Vector2(0.5, 0.6))  # 中间缩小
+	curve.add_point(Vector2(1.0, 0.0))  # 结束时消失
+	particles.scale_amount_curve = curve
 
 	# 粒子运动 - 向外爆炸
 	particles.direction = Vector2.ZERO

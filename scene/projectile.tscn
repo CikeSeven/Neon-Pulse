@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://dxigi0dtv7mu5"]
+
+[ext_resource type="Script" uid="uid://bxuq431yk4gn0" path="res://script/projectile.gd" id="1_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 15.0
+
+[node name="Projectile" type="Area2D" unique_id=406886100]
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("1_script")
+
+[node name="GlowOuter" type="Polygon2D" parent="." unique_id=694492859]
+modulate = Color(1, 0, 0.2, 0.3)
+scale = Vector2(1.8, 1.8)
+color = Color(1, 0, 0.2, 0.3)
+polygon = PackedVector2Array(18, 0, -9, 9, -9, -9)
+
+[node name="GlowInner" type="Polygon2D" parent="." unique_id=1858652628]
+modulate = Color(1, 0, 0.2, 0.5)
+scale = Vector2(1.4, 1.4)
+color = Color(1, 0, 0.2, 0.5)
+polygon = PackedVector2Array(18, 0, -9, 9, -9, -9)
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=286113975]
+modulate = Color(3, 0.2, 0.4, 1)
+color = Color(1, 0, 0.13, 1)
+polygon = PackedVector2Array(18, 0, -9, 9, -9, -9)
+
+[node name="CoreHighlight" type="Polygon2D" parent="." unique_id=1948586641]
+modulate = Color(4, 2, 2.5, 1)
+scale = Vector2(0.5, 0.5)
+color = Color(1, 0.7, 0.8, 1)
+polygon = PackedVector2Array(18, 0, -9, 9, -9, -9)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1919921685]
+shape = SubResource("CircleShape2D_1")

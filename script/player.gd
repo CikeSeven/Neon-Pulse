@@ -190,12 +190,34 @@ func flash_hit() -> void:
 
 ## 生成受击粒子
 func spawn_hit_particles() -> void:
-	# 使用ImpactBurst作为受击粒子，改变颜色为红色
-	var hit_burst = impact_burst.duplicate() as CPUParticles2D
-	hit_burst.modulate = Color(3.0, 0.3, 0.3, 1.0)  # 红色
+	var hit_burst = CPUParticles2D.new()
+	hit_burst.emitting = false
+	hit_burst.one_shot = true
+	hit_burst.explosiveness = 1.0
 	hit_burst.amount = 15
-	hit_burst.spread = 180.0  # 全方向
+	hit_burst.lifetime = 0.5
+
+	# 粒子外观 - 红色霓虹
+	hit_burst.modulate = Color(3.0, 0.3, 0.3, 1.0)
+	hit_burst.scale_amount_min = 5.0
+	hit_burst.scale_amount_max = 10.0
+
+	# 粒子由大到小消散
+	var curve = Curve.new()
+	curve.add_point(Vector2(0.0, 1.0))  # 开始时满尺寸
+	curve.add_point(Vector2(0.7, 0.5))  # 中间缩小
+	curve.add_point(Vector2(1.0, 0.0))  # 结束时消失
+	hit_burst.scale_amount_curve = curve
+
+	# 粒子运动
 	hit_burst.direction = Vector2.ZERO
+	hit_burst.spread = 180.0
+	hit_burst.initial_velocity_min = 100.0
+	hit_burst.initial_velocity_max = 200.0
+	hit_burst.gravity = Vector2.ZERO
+	hit_burst.damping_min = 150.0
+	hit_burst.damping_max = 250.0
+
 	add_child(hit_burst)
 	hit_burst.position = Vector2.ZERO
 	hit_burst.restart()
@@ -255,20 +277,43 @@ func die() -> void:
 ## 生成死亡粒子
 func spawn_death_particles() -> void:
 	# 大爆炸效果
-	var death_burst = impact_burst.duplicate() as CPUParticles2D
-	death_burst.modulate = Color(5.0, 0.5, 0.5, 1.0)  # 亮红色
+	var death_burst = CPUParticles2D.new()
+	death_burst.emitting = false
+	death_burst.one_shot = true
+	death_burst.explosiveness = 1.0
 	death_burst.amount = 50
-	death_burst.spread = 180.0
-	death_burst.direction = Vector2.ZERO
-	death_burst.initial_velocity_min = 300.0
-	death_burst.initial_velocity_max = 500.0
 	death_burst.lifetime = 1.0
+
+	# 粒子外观 - 亮红色霓虹
+	death_burst.modulate = Color(5.0, 0.5, 0.5, 1.0)
 	death_burst.scale_amount_min = 15.0
 	death_burst.scale_amount_max = 25.0
-	add_child(death_burst)
-	death_burst.position = Vector2.ZERO
+
+	# 粒子由大到小消散
+	var curve = Curve.new()
+	curve.add_point(Vector2(0.0, 1.0))  # 开始时满尺寸
+	curve.add_point(Vector2(0.4, 0.7))  # 快速缩小
+	curve.add_point(Vector2(0.8, 0.3))  # 继续缩小
+	curve.add_point(Vector2(1.0, 0.0))  # 结束时消失
+	death_burst.scale_amount_curve = curve
+
+	# 粒子运动 - 向外爆炸
+	death_burst.direction = Vector2.ZERO
+	death_burst.spread = 180.0
+	death_burst.initial_velocity_min = 300.0
+	death_burst.initial_velocity_max = 500.0
+	death_burst.gravity = Vector2.ZERO
+	death_burst.damping_min = 200.0
+	death_burst.damping_max = 350.0
+
+	# 添加到场景根节点（不随玩家销毁）
+	get_tree().current_scene.add_child(death_burst)
+	death_burst.global_position = global_position
 	death_burst.restart()
 	death_burst.emitting = true
+
+	# 自动清理
+	get_tree().create_timer(2.0).timeout.connect(death_burst.queue_free)
 
 
 func _exit_tree() -> void:

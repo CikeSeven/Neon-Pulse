@@ -187,6 +187,12 @@ func _process_charging(delta: float) -> void:
 	# 高速向左冲撞
 	position.x -= charge_speed * delta
 
+## 冲撞时免疫击退
+func apply_knockback(direction: Vector2, knockback_amount: float) -> void:
+	if state == ChargerState.CHARGING:
+		return
+	super.apply_knockback(direction, knockback_amount)
+
 ## 重写死亡函数，清理拖尾
 func die() -> void:
 	# 清理冲撞拖尾

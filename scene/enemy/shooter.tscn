@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://dw6g7nibs64wu"]
+
+[ext_resource type="PackedScene" uid="uid://df8dl6txho4t5" path="res://scene/enemy/enemy.tscn" id="1_enemy"]
+[ext_resource type="Script" uid="uid://cenldaupc6pw" path="res://script/enemy/shooter.gd" id="2_shooter"]
+
+[node name="Shooter" unique_id=1898690723 instance=ExtResource("1_enemy")]
+script = ExtResource("2_shooter")
+shoot_interval = 4.0
+bullet_speed = 500.0
+bullet_damage = 15.0
+bullet_color = Color(3, 0.1, 0.2, 1)
+shoot_angle = 60.0
+shoot_range = 800.0
+speed = 80.0
+contact_damage = 5.0
+
+[node name="GlowOuter" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="0" unique_id=1476034888]
+modulate = Color(0.667, 0, 1, 0.25)
+scale = Vector2(1.25, 1.25)
+color = Color(0.667, 0, 1, 0.25)
+polygon = PackedVector2Array(-38, -38, 38, -38, 45, 0, 38, 38, -38, 38, -45, 0)
+
+[node name="GlowInner" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="1" unique_id=540343706]
+modulate = Color(0.667, 0, 1, 0.4)
+scale = Vector2(1.12, 1.12)
+color = Color(0.667, 0, 1, 0.4)
+polygon = PackedVector2Array(-38, -38, 38, -38, 45, 0, 38, 38, -38, 38, -45, 0)
+
+[node name="Body" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="2" unique_id=1135903702]
+modulate = Color(1.8, 0, 2.5, 1)
+color = Color(0.667, 0, 1, 1)
+polygon = PackedVector2Array(-38, -38, 38, -38, 45, 0, 38, 38, -38, 38, -45, 0)
+
+[node name="CoreHighlight" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="3" unique_id=1154381316]
+modulate = Color(2.5, 1.5, 3, 1)
+scale = Vector2(0.5, 0.5)
+color = Color(0.8, 0.5, 1, 1)
+polygon = PackedVector2Array(-38, -38, 38, -38, 45, 0, 38, 38, -38, 38, -45, 0)
+
+[node name="GunBarrel" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="4" unique_id=164823828]
+modulate = Color(2, 0.5, 2.5, 1)
+position = Vector2(-52, 0)
+color = Color(0.8, 0.3, 1, 1)
+polygon = PackedVector2Array(0, -9, -30, -6, -30, 6, 0, 9)
+
+[node name="Hurtbox" parent="." index="1" unique_id=1293090469]
+collision_layer = 32
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hurtbox" index="0" unique_id=1719452937]
+polygon = PackedVector2Array(-38, -38, 38, -38, 45, 0, 38, 38, -38, 38, -45, 0)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox" parent_id_path=PackedInt32Array(1151360192) index="0" unique_id=168327617]
+polygon = PackedVector2Array(-38, -38, 38, -38, 45, 0, 38, 38, -38, 38, -45, 0)
+
+[node name="VisibleOnScreenNotifier2D" parent="." index="3" unique_id=1246620138]
+rect = Rect2(-90, -50, 150, 100)

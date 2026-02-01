@@ -33,6 +33,56 @@
 | UI图标 | 可使用外部资源 | 武器/道具/天赋图标 |
 | 字体 | 可使用外部资源 | 霓虹/科幻风格字体 |
 
+### 碰撞层规范
+
+| 层级 | 名称 | 用途 |
+|------|------|------|
+| Layer 1 | Environment | 环境/障碍物 |
+| Layer 2 | Player | 玩家角色 |
+| Layer 3 | Enemy | 敌人 |
+| Layer 4 | PlayerHurtbox | 玩家受伤区域 |
+| Layer 5 | PlayerHitbox | 玩家攻击区域 |
+| Layer 6 | EnemyHurtbox | 敌人受伤区域 |
+| Layer 7 | EnemyHitbox | 敌人攻击区域 |
+
+### Hitbox/Hurtbox 设置规范
+
+**重要注意事项**：
+- **Hitbox (攻击判定)**：只需设置 `collision_mask`，`collision_layer` 设为 0
+- **Hurtbox (受伤判定)**：只需设置 `collision_layer`，`collision_mask` 设为 0
+
+**配置规则**：
+```
+玩家:
+  Hitbox:  layer = 0, mask = 6 (EnemyHurtbox)   # 攻击敌人
+  Hurtbox: layer = 4, mask = 0                  # 被敌人攻击
+
+敌人:
+  Hitbox:  layer = 0, mask = 4 (PlayerHurtbox)  # 攻击玩家
+  Hurtbox: layer = 6, mask = 0                  # 被玩家攻击
+
+敌人飞行物 (Projectile):
+  layer = 0, mask = 4 (PlayerHurtbox)           # 只检测玩家受伤区域
+```
+
+**原理**：Hitbox 主动检测 Hurtbox，所以 Hitbox 的 mask 指向对方的 Hurtbox 层。
+
+### 粒子效果规范
+
+**重要注意事项**：
+- 粒子不要突然消失，要使用 `scale_amount_curve` 让粒子由大到小慢慢消散
+- 推荐曲线：起始值 1.0 → 结束值 0.0，使用 EASE_IN 或线性过渡
+- 死亡爆炸粒子生命周期建议 0.6-1.0 秒
+- 受击粒子生命周期建议 0.3-0.5 秒
+
+**Curve 配置示例**：
+```gdscript
+var curve = Curve.new()
+curve.add_point(Vector2(0.0, 1.0))  # 开始时满尺寸
+curve.add_point(Vector2(1.0, 0.0))  # 结束时缩小到0
+particles.scale_amount_curve = curve
+```
+
 ### 粒子效果清单
 
 | 场景 | 粒子类型 | 说明 |
@@ -99,6 +149,11 @@
   - [x] 同轨道探测 (检测范围600px)
   - [x] 蓄力后摇 (0.8s闪烁+粒子)
   - [x] 高速冲撞 (800速度+拖尾)
+  - [x] 冲撞免疫击退 (Charging state immune)
+- [x] 敌人血条系统 (script/enemy/enemy.gd)
+  - [x] 敌人头顶跟随血条 (ProgressBar + ColorRect)
+  - [x] 实时血量更新
+  - [x] 低血量变色提示 (HP<30% 变红)
 - [x] 敌人击退系统 (Hitbox.knockback, Bullet.knockback)
 - [x] 敌人受击效果优化 (仅水平击退)
 
@@ -138,6 +193,11 @@
   - [x] 同轨道检测 (探测范围600px)
   - [x] 后摇蓄力 (0.8s闪烁警告 + 橙色蓄力粒子)
   - [x] 高速冲刺AI (800速度 + 火焰拖尾)
+  - [x] 冲撞免疫击退
+- [x] 敌人血条系统
+  - [x] 实时显示当前HP/MAXHP
+  - [x] 跟随敌人移动
+  - [x] 低血量变色提示
 - [ ] 射击型敌人 (Shooter)
   - [ ] 锁定玩家
   - [ ] 发射子弹
@@ -389,14 +449,14 @@ res://
 |------|--------|--------|--------|
 | 玩家系统 | 7 | 5 | 58% |
 | 武器系统 | 8 | 8 | 50% |
-| 敌人系统 | 10 | 8 | 56% |
-| UI系统 | 0 | 10 | 0% |
+| 敌人系统 | 12 | 6 | 67% |
+| UI系统 | 0 | 9 | 0% |
 | 经济系统 | 0 | 4 | 0% |
 | 等级系统 | 0 | 3 | 0% |
 | 天赋系统 | 0 | 17 | 0% |
 | 关卡系统 | 0 | 4 | 0% |
 | 存档系统 | 0 | 5 | 0% |
-| **总计** | **25** | **64** | **28%** |
+| **总计** | **27** | **63** | **30%** |
 
 ---
 
