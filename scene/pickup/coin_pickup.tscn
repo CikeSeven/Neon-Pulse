@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://3sy3mi7k2agd"]
+
+[ext_resource type="Script" uid="uid://cwt458c0p5ld1" path="res://script/pickup/coin_pickup.gd" id="1_coin"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 20.0
+
+[node name="CoinPickup" type="Area2D" unique_id=1540796873]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_coin")
+
+[node name="GlowOuter" type="Polygon2D" parent="." unique_id=1953076589]
+modulate = Color(1, 0.85, 0, 0.3)
+position = Vector2(-15, -13.5)
+scale = Vector2(1.5, 1.5)
+color = Color(1, 0.85, 0, 0.3)
+polygon = PackedVector2Array(10, 0, 18, 4, 18, 14, 10, 18, 2, 14, 2, 4)
+
+[node name="GlowInner" type="Polygon2D" parent="." unique_id=1283778514]
+modulate = Color(1, 0.85, 0, 0.5)
+position = Vector2(-12, -10.8)
+scale = Vector2(1.2, 1.2)
+color = Color(1, 0.85, 0, 0.5)
+polygon = PackedVector2Array(10, 0, 18, 4, 18, 14, 10, 18, 2, 14, 2, 4)
+
+[node name="Body" type="Polygon2D" parent="." unique_id=1755738553]
+modulate = Color(2.5, 2, 0.5, 1)
+position = Vector2(-10, -9)
+color = Color(1, 0.85, 0, 1)
+polygon = PackedVector2Array(10, 0, 18, 4, 18, 14, 10, 18, 2, 14, 2, 4)
+
+[node name="CoreHighlight" type="Polygon2D" parent="." unique_id=1626057853]
+modulate = Color(3, 2.5, 1.5, 1)
+position = Vector2(-4, -3.6)
+scale = Vector2(0.4, 0.4)
+color = Color(1, 0.95, 0.7, 1)
+polygon = PackedVector2Array(10, 0, 18, 4, 18, 14, 10, 18, 2, 14, 2, 4)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1494918985]
+shape = SubResource("CircleShape2D_1")

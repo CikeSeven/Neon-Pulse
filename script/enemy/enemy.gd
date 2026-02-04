@@ -2,12 +2,14 @@ class_name Enemy extends Node2D
 
 
 @export var speed: float = 150
-@export var max_hp: float = 30.0
+@export var max_hp: float = 30.0 ## 怪物血量
 @export var contact_damage: float = 10.0 ## 敌人撞玩家造成的伤害
+@export var hp_size: Vector2 = Vector2(80, 2) ## 血条UI大小
 
 @export_group("Loot")
 @export var is_elite: bool = false ## 是否为精英怪
 @export var exp_drop_chance: float = 0.6 ## 普通怪掉落经验概率 (0-1)
+@export var coin_drop_chance: float = 0.4 ## 普通怪掉落金币概率 (0-1)
 
 @export_group("Hit Effects")
 @export var hit_flash_color: Color = Color(0.3, 2.0, 3.0, 1.0) ## 受击闪烁颜色（青色霓虹）
@@ -23,10 +25,17 @@ var current_hp: float
 var is_hit_frozen: bool = false ## 是否处于受击顿帧
 var original_speed: float
 
+## 屏幕检测相关
+var has_entered_screen: bool = false  ## 是否曾经进入过屏幕
+var is_offscreen: bool = false        ## 当前是否在屏幕外
+var offscreen_timer: float = 0.0      ## 离开屏幕后的计时器
+const OFFSCREEN_DESTROY_TIME: float = 5.0  ## 离开屏幕后销毁时间
+
 ## 血条组件
 var hp_bar: ProgressBar
 var hp_bar_bg: ColorRect
 var hp_label: Label
+var screen_notifier: VisibleOnScreenNotifier2D
 
 func _ready() -> void:
 	current_hp = max_hp
@@ -39,11 +48,12 @@ func _ready() -> void:
 	if hurtbox:
 		hurtbox.hurt.connect(_on_hurtbox_hurt)
 
-	# 自动销毁逻辑
-	var notifier = VisibleOnScreenNotifier2D.new()
-	notifier.rect = Rect2(-20, -20, 40, 40)
-	add_child(notifier)
-	notifier.screen_exited.connect(queue_free)
+	# 屏幕可见性检测
+	screen_notifier = VisibleOnScreenNotifier2D.new()
+	screen_notifier.rect = Rect2(-50, -50, 100, 100)
+	add_child(screen_notifier)
+	screen_notifier.screen_entered.connect(_on_screen_entered)
+	screen_notifier.screen_exited.connect(_on_screen_exited)
 
 	# 创建血条
 	_create_hp_bar()
@@ -52,6 +62,9 @@ func _physics_process(delta: float) -> void:
 	if is_hit_frozen:
 		return
 	position.x -= speed * delta
+
+	# 屏幕外销毁计时
+	_update_offscreen_timer(delta)
 
 ## 创建血条
 func _create_hp_bar() -> void:
@@ -63,14 +76,14 @@ func _create_hp_bar() -> void:
 
 	# 血条背景 (暗色)
 	hp_bar_bg = ColorRect.new()
-	hp_bar_bg.size = Vector2(60, 8)
+	hp_bar_bg.size = hp_size
 	hp_bar_bg.position = Vector2(-30, 0)
 	hp_bar_bg.color = Color(0.2, 0.2, 0.2, 0.8)
 	container.add_child(hp_bar_bg)
 
 	# 血条前景
 	hp_bar = ProgressBar.new()
-	hp_bar.size = Vector2(60, 8)
+	hp_bar.size = hp_size
 	hp_bar.position = Vector2(-30, 0)
 	hp_bar.max_value = max_hp
 	hp_bar.value = current_hp
@@ -82,8 +95,6 @@ func _create_hp_bar() -> void:
 	style.set_corner_radius_all(2)
 	style.content_margin_left = 2.0
 	style.content_margin_right = 2.0
-	style.content_margin_top = 1.0
-	style.content_margin_bottom = 1.0
 
 	hp_bar.add_theme_stylebox_override("fill", style)
 	# 移除边框让样式更干净
@@ -130,7 +141,6 @@ func _on_hurtbox_hurt(attacker_hitbox: Hitbox) -> void:
 # --- 扣血逻辑 ---
 func take_damage(amount: float, knockback_dir: Vector2 = Vector2.RIGHT, knockback_amount: float = -1.0) -> void:
 	current_hp -= amount
-	print("%s took %s damage. HP: %s" % [name, amount, current_hp])
 
 	# 更新血条
 	_update_hp_bar()
@@ -219,6 +229,29 @@ func apply_hit_freeze() -> void:
 func _end_hit_freeze() -> void:
 	is_hit_frozen = false
 
+## 进入屏幕回调
+func _on_screen_entered() -> void:
+	has_entered_screen = true
+	is_offscreen = false
+	offscreen_timer = 0.0
+
+## 离开屏幕回调
+func _on_screen_exited() -> void:
+	is_offscreen = true
+
+## 更新屏幕外计时器
+func _update_offscreen_timer(delta: float) -> void:
+	if not has_entered_screen:
+		# 还没进入过屏幕，不计时
+		return
+
+	if is_offscreen:
+		offscreen_timer += delta
+		if offscreen_timer >= OFFSCREEN_DESTROY_TIME:
+			queue_free()
+	else:
+		offscreen_timer = 0.0
+
 ## 死亡处理
 func die() -> void:
 	# 清理血条
@@ -227,7 +260,10 @@ func die() -> void:
 		hp_container.queue_free()
 
 	# 掉落经验
-	_drop_experience()
+	call_deferred("_drop_experience")
+
+	# 掉落金币
+	call_deferred("_drop_coins")
 
 	spawn_death_particles()
 	queue_free()
@@ -256,6 +292,31 @@ func _drop_experience() -> void:
 		var exp_orb = exp_orb_scene.instantiate()
 		exp_orb.global_position = global_position
 		get_tree().current_scene.add_child(exp_orb)
+
+## 掉落金币
+func _drop_coins() -> void:
+	var coin_scene = load("res://scene/pickup/coin_pickup.tscn")
+	if not coin_scene:
+		return
+
+	var drop_count = 0
+
+	if is_elite:
+		# 精英怪：根据关卡掉落多个金币
+		var level = Global.current_level
+		var min_drop = 2 + level / 2  # 最少2个，每2关+1
+		var max_drop = 4 + level      # 最多4个，每关+1
+		drop_count = randi_range(min_drop, max_drop)
+	else:
+		# 普通怪：有概率掉落0-1个
+		if randf() < coin_drop_chance:
+			drop_count = 1
+
+	# 生成金币
+	for i in range(drop_count):
+		var coin = coin_scene.instantiate()
+		coin.global_position = global_position
+		get_tree().current_scene.add_child(coin)
 
 ## 生成死亡粒子
 func spawn_death_particles() -> void:

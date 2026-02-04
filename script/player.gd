@@ -1,8 +1,13 @@
 extends CharacterBody2D
 
 
-@onready var neon_trail: CPUParticles2D = $NeonTrail
+@onready var trail_container: Node2D = $TrailContainer
+@onready var spark_trail: CPUParticles2D = $TrailContainer/SparkTrail
+@onready var core_glow: CPUParticles2D = $TrailContainer/CoreGlow
+@onready var micro_sparks: CPUParticles2D = $TrailContainer/MicroSparks
 @onready var impact_burst: CPUParticles2D = $ImpactBurst
+@onready var impact_flash: CPUParticles2D = $ImpactFlash
+@onready var impact_ring: CPUParticles2D = $ImpactRing
 @onready var hurtbox: Hurtbox = $Hurtbox
 @onready var visuals: ColorRect = $ColorRect
 
@@ -40,6 +45,9 @@ func _ready() -> void:
 	# 连接Hurtbox信号
 	if hurtbox:
 		hurtbox.hurt.connect(_on_hurtbox_hurt)
+
+	# 连接升级信号
+	Global.player_leveled_up.connect(_on_player_leveled_up)
 
 func _physics_process(delta: float) -> void:
 	handle_input()      # 1. 处理输入
@@ -110,25 +118,43 @@ func check_impact() -> void:
 
 # 触发爆炸特效
 func trigger_impact_visuals() -> void:
+	# 主火花爆发
 	impact_burst.restart()
 	impact_burst.emitting = true
+
+	# 中心闪光
+	impact_flash.restart()
+	impact_flash.emitting = true
+
+	# 扩散环
+	impact_ring.restart()
+	impact_ring.emitting = true
+
+	# 屏幕震动
+	Global.request_screen_shake(8.0, 0.15)
 
 # 处理常规拖尾特效
 func update_visuals() -> void:
 	if is_changing_lane:
-		if neon_trail.emitting:
-			neon_trail.emitting = false
+		_set_trail_emitting(false)
 		return
 
 	var target_y = Global.lane_y_positions[Global.current_lane1]
 	var distance_to_lane = abs(position.y - target_y)
 
 	if distance_to_lane < 2.0:
-		if not neon_trail.emitting:
-			neon_trail.emitting = true
+		_set_trail_emitting(true)
 	else:
-		if neon_trail.emitting:
-			neon_trail.emitting = false
+		_set_trail_emitting(false)
+
+## 设置所有拖尾粒子的发射状态
+func _set_trail_emitting(emitting: bool) -> void:
+	if spark_trail and spark_trail.emitting != emitting:
+		spark_trail.emitting = emitting
+	if core_glow and core_glow.emitting != emitting:
+		core_glow.emitting = emitting
+	if micro_sparks and micro_sparks.emitting != emitting:
+		micro_sparks.emitting = emitting
 
 # ============================================================
 # 受击系统
@@ -319,6 +345,56 @@ func spawn_death_particles() -> void:
 
 	# 自动清理
 	get_tree().create_timer(2.0).timeout.connect(death_burst.queue_free)
+
+## 升级回调
+func _on_player_leveled_up(_new_level: int) -> void:
+	# 触发视觉特效
+	if visuals and visuals.has_method("play_level_up_effect"):
+		visuals.play_level_up_effect()
+
+	# 升级爆发粒子
+	_spawn_level_up_particles()
+
+	# 屏幕震动
+	Global.request_screen_shake(10.0, 0.2)
+
+## 生成升级粒子
+func _spawn_level_up_particles() -> void:
+	var particles = CPUParticles2D.new()
+	particles.emitting = false
+	particles.one_shot = true
+	particles.explosiveness = 1.0
+	particles.amount = 30
+	particles.lifetime = 0.8
+
+	# 蓝色霓虹粒子
+	particles.modulate = Color(0.5, 0.8, 3.0, 1.0)
+	particles.scale_amount_min = 4.0
+	particles.scale_amount_max = 10.0
+
+	# 粒子由大到小消散
+	var curve = Curve.new()
+	curve.add_point(Vector2(0.0, 1.0))
+	curve.add_point(Vector2(0.5, 0.6))
+	curve.add_point(Vector2(1.0, 0.0))
+	particles.scale_amount_curve = curve
+
+	# 向外扩散
+	particles.direction = Vector2.ZERO
+	particles.spread = 180.0
+	particles.initial_velocity_min = 150.0
+	particles.initial_velocity_max = 300.0
+	particles.gravity = Vector2.ZERO
+	particles.damping_min = 100.0
+	particles.damping_max = 200.0
+
+	add_child(particles)
+	particles.position = Vector2.ZERO
+	particles.restart()
+	particles.emitting = true
+
+	# 自动清理
+	get_tree().create_timer(1.5).timeout.connect(particles.queue_free)
 
 
 func _exit_tree() -> void:

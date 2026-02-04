@@ -5,13 +5,30 @@
 [ext_resource type="PackedScene" uid="uid://bbbf1vbbnqx46" path="res://scene/weapon/weapon_manager.tscn" id="3_fvtld"]
 [ext_resource type="Script" uid="uid://tw62ron1anle" path="res://script/Hurtbox.gd" id="4_ct4mp"]
 
-[sub_resource type="Curve" id="Curve_fvtld"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
+[sub_resource type="Curve" id="Curve_spark_scale"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 0.6), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
 
-[sub_resource type="Curve" id="Curve_hjaqi"]
-_data = [Vector2(0.0034482777, 1), 0.0, 0.0, 0, 0, Vector2(0.9965518, 0.03405571), 0.0, 0.0, 0, 0]
-point_count = 2
+[sub_resource type="Gradient" id="Gradient_spark"]
+colors = PackedColorArray(1, 0.9, 0.3, 1, 1, 0.4, 0.1, 0)
+
+[sub_resource type="Curve" id="Curve_core_scale"]
+_data = [Vector2(0, 0.8), 0.0, 0.0, 0, 0, Vector2(0.2, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_impact_scale"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.15, 0.8), 0.0, 0.0, 0, 0, Vector2(0.5, 0.3), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Gradient" id="Gradient_impact"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 0.5, 0.2, 0)
+
+[sub_resource type="Curve" id="Curve_core_glow"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.5, 0.6), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_core_glow"]
+colors = PackedColorArray(0.4, 0.7, 1, 1, 0.2, 0.4, 1, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s4jxa"]
 size = Vector2(80, 80)
@@ -23,40 +40,120 @@ size = Vector2(80, 80)
 collision_layer = 2
 script = ExtResource("1_4flbx")
 
-[node name="ImpactBurst" type="CPUParticles2D" parent="." unique_id=1438059858 groups=["player"]]
-modulate = Color(2.221, 0.745, 0.581, 1)
-position = Vector2(-39, 0)
-emitting = false
+[node name="TrailContainer" type="Node2D" parent="." unique_id=1208234827]
+position = Vector2(-42, 0)
+
+[node name="SparkTrail" type="CPUParticles2D" parent="TrailContainer" unique_id=946810932]
+modulate = Color(4, 2.5, 0.8, 1)
+amount = 80
+lifetime = 0.5
+randomness = 0.3
+emission_shape = 3
+emission_rect_extents = Vector2(2, 20)
+direction = Vector2(-1, 0)
+spread = 25.0
+gravity = Vector2(0, 50)
+initial_velocity_min = 250.0
+initial_velocity_max = 400.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+scale_amount_min = 2.0
+scale_amount_max = 5.0
+scale_amount_curve = SubResource("Curve_spark_scale")
+color_ramp = SubResource("Gradient_spark")
+
+[node name="CoreGlow" type="CPUParticles2D" parent="TrailContainer" unique_id=27967973]
+modulate = Color(5, 3, 1.5, 1)
 amount = 25
+lifetime = 0.35
+randomness = 0.2
+emission_shape = 3
+emission_rect_extents = Vector2(1, 15)
+direction = Vector2(-1, 0)
+spread = 15.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 180.0
+initial_velocity_max = 280.0
+scale_amount_min = 6.0
+scale_amount_max = 10.0
+scale_amount_curve = SubResource("Curve_core_scale")
+
+[node name="MicroSparks" type="CPUParticles2D" parent="TrailContainer" unique_id=1638144969]
+modulate = Color(6, 4, 2, 1)
+amount = 40
+lifetime = 0.3
+randomness = 0.5
+emission_shape = 3
+emission_rect_extents = Vector2(3, 25)
+direction = Vector2(-1, 0)
+gravity = Vector2(0, 80)
+initial_velocity_min = 150.0
+initial_velocity_max = 350.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+scale_amount_max = 3.0
+scale_amount_curve = SubResource("Curve_spark_scale")
+
+[node name="ImpactBurst" type="CPUParticles2D" parent="." unique_id=1438059858 groups=["player"]]
+modulate = Color(6, 3, 1, 1)
+position = Vector2(-40, 0)
+emitting = false
+amount = 60
 lifetime = 0.6
 one_shot = true
 explosiveness = 1.0
+randomness = 0.4
 emission_shape = 3
-emission_rect_extents = Vector2(1, 24)
+emission_rect_extents = Vector2(5, 35)
 direction = Vector2(-1, 0)
-spread = 40.0
-gravity = Vector2(0, 0)
-initial_velocity_min = 180.0
-initial_velocity_max = 200.0
-scale_amount_min = 12.0
-scale_amount_max = 14.0
-scale_amount_curve = SubResource("Curve_fvtld")
+spread = 60.0
+gravity = Vector2(0, 100)
+initial_velocity_min = 300.0
+initial_velocity_max = 600.0
+angular_velocity_min = -540.0
+angular_velocity_max = 540.0
+scale_amount_min = 3.0
+scale_amount_max = 8.0
+scale_amount_curve = SubResource("Curve_impact_scale")
+color_ramp = SubResource("Gradient_impact")
 
-[node name="NeonTrail" type="CPUParticles2D" parent="." unique_id=946810932]
-modulate = Color(1.8247963, 0.5908752, 0.4661066, 1)
-position = Vector2(-36, 0)
-amount = 50
-lifetime = 0.8
-emission_shape = 3
-emission_rect_extents = Vector2(1, 12)
-direction = Vector2(-1, 0)
-spread = 20.0
+[node name="ImpactFlash" type="CPUParticles2D" parent="." unique_id=625251074]
+modulate = Color(10, 8, 5, 1)
+position = Vector2(-40, 0)
+emitting = false
+amount = 20
+lifetime = 0.25
+one_shot = true
+explosiveness = 1.0
+emission_shape = 1
+emission_sphere_radius = 10.0
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 150.0
+scale_amount_min = 15.0
+scale_amount_max = 25.0
+scale_amount_curve = SubResource("Curve_core_scale")
+
+[node name="ImpactRing" type="CPUParticles2D" parent="." unique_id=1406207617]
+modulate = Color(4, 2, 0.5, 1)
+position = Vector2(-40, 0)
+emitting = false
+amount = 30
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+emission_shape = 1
+emission_sphere_radius = 5.0
+direction = Vector2(0, 0)
+spread = 180.0
 gravity = Vector2(0, 0)
 initial_velocity_min = 200.0
-initial_velocity_max = 220.0
-scale_amount_min = 10.0
-scale_amount_max = 12.0
-scale_amount_curve = SubResource("Curve_hjaqi")
+initial_velocity_max = 400.0
+scale_amount_min = 4.0
+scale_amount_max = 8.0
+scale_amount_curve = SubResource("Curve_impact_scale")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=2064506397]
 anchors_preset = 8
@@ -74,6 +171,73 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("2_hjaqi")
 
+[node name="CoreCircle" type="Node2D" parent="ColorRect" unique_id=1523301821]
+position = Vector2(40, 40)
+
+[node name="GlowOuter" type="Polygon2D" parent="ColorRect/CoreCircle" unique_id=999901423]
+modulate = Color(0.2, 0.5, 1, 0.15)
+scale = Vector2(1.8, 1.8)
+color = Color(0.2, 0.5, 1, 0.15)
+polygon = PackedVector2Array(20, 0, 17.32, 10, 10, 17.32, 0, 20, -10, 17.32, -17.32, 10, -20, 0, -17.32, -10, -10, -17.32, 0, -20, 10, -17.32, 17.32, -10)
+
+[node name="GlowMiddle" type="Polygon2D" parent="ColorRect/CoreCircle" unique_id=317784943]
+modulate = Color(0.3, 0.6, 1, 0.3)
+scale = Vector2(1.4, 1.4)
+color = Color(0.3, 0.6, 1, 0.3)
+polygon = PackedVector2Array(20, 0, 17.32, 10, 10, 17.32, 0, 20, -10, 17.32, -17.32, 10, -20, 0, -17.32, -10, -10, -17.32, 0, -20, 10, -17.32, 17.32, -10)
+
+[node name="RingOuter" type="Polygon2D" parent="ColorRect/CoreCircle" unique_id=1367479826]
+modulate = Color(0.3, 0.7, 2, 1)
+color = Color(0.3, 0.7, 1, 1)
+polygon = PackedVector2Array(18, 0, 15.588, 9, 9, 15.588, 0, 18, -9, 15.588, -15.588, 9, -18, 0, -15.588, -9, -9, -15.588, 0, -18, 9, -15.588, 15.588, -9)
+
+[node name="RingInner" type="Polygon2D" parent="ColorRect/CoreCircle" unique_id=331769950]
+modulate = Color(0.1, 0.1, 0.15, 1)
+scale = Vector2(0.75, 0.75)
+color = Color(0.1, 0.1, 0.15, 1)
+polygon = PackedVector2Array(18, 0, 15.588, 9, 9, 15.588, 0, 18, -9, 15.588, -15.588, 9, -18, 0, -15.588, -9, -9, -15.588, 0, -18, 9, -15.588, 15.588, -9)
+
+[node name="CoreBright" type="Polygon2D" parent="ColorRect/CoreCircle" unique_id=2019116713]
+modulate = Color(0.5, 0.8, 3, 1)
+scale = Vector2(0.35, 0.35)
+color = Color(0.5, 0.8, 1, 1)
+polygon = PackedVector2Array(20, 0, 17.32, 10, 10, 17.32, 0, 20, -10, 17.32, -17.32, 10, -20, 0, -17.32, -10, -10, -17.32, 0, -20, 10, -17.32, 17.32, -10)
+
+[node name="CoreGlowParticles" type="CPUParticles2D" parent="ColorRect/CoreCircle" unique_id=259931903]
+modulate = Color(0.5, 0.8, 3, 1)
+amount = 12
+randomness = 0.3
+emission_shape = 1
+emission_sphere_radius = 8.0
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 5.0
+initial_velocity_max = 15.0
+scale_amount_min = 2.0
+scale_amount_max = 5.0
+scale_amount_curve = SubResource("Curve_core_glow")
+color_ramp = SubResource("Gradient_core_glow")
+
+[node name="OrbitParticles" type="CPUParticles2D" parent="ColorRect/CoreCircle" unique_id=2093851935]
+modulate = Color(0.3, 0.6, 2.5, 1)
+amount = 6
+lifetime = 2.0
+randomness = 0.2
+emission_shape = 1
+emission_sphere_radius = 18.0
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 20.0
+initial_velocity_max = 40.0
+angular_velocity_min = 90.0
+angular_velocity_max = 180.0
+scale_amount_min = 1.5
+scale_amount_max = 3.0
+scale_amount_curve = SubResource("Curve_core_glow")
+color_ramp = SubResource("Gradient_core_glow")
+
 [node name="WeaponManager" parent="." unique_id=1564347148 instance=ExtResource("3_fvtld")]
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=400433912]
@@ -87,3 +251,9 @@ shape = SubResource("RectangleShape2D_s4jxa")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=417993319]
 shape = SubResource("RectangleShape2D_ct4mp")
+
+[node name="Line2D" type="Line2D" parent="." unique_id=488902600]
+modulate = Color(0.4, 0.4, 2, 1)
+points = PackedVector2Array(31, 34, 31, -31, -31, -31, -31, 32, 31, 32)
+width = 4.0
+default_color = Color(0.4, 0.4, 2, 1)

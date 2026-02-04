@@ -2,27 +2,90 @@
 
 [ext_resource type="PackedScene" uid="uid://bjxtkmvoqglyj" path="res://scene/bullet/bullet.tscn" id="1_br1ca"]
 
-[sub_resource type="Gradient" id="Gradient_br1ca"]
-offsets = PackedFloat32Array(0, 0.29608938, 0.54469275, 0.9357542)
-colors = PackedColorArray(1.536, 0.352, 0.357, 0, 2.454227, 0.5873668, 0.5943571, 1, 1.6197081, 0.37372842, 0.37839383, 1, 0.40724128, 1.353256, 1.2506721, 1)
+[sub_resource type="Curve" id="Curve_trail_width"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 0.8), 0.0, 0.0, 0, 0, Vector2(0.7, 0.4), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
 
-[node name="AkBullet" unique_id=1906439511 instance=ExtResource("1_br1ca")]
+[sub_resource type="Gradient" id="Gradient_trail"]
+offsets = PackedFloat32Array(0, 0.3, 0.6, 1)
+colors = PackedColorArray(1, 0.6, 0.1, 0, 1, 0.5, 0.1, 0.8, 1, 0.3, 0.05, 1, 0.3, 0.1, 0.02, 0.5)
+
+[sub_resource type="Curve" id="Curve_spark_scale"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.5, 0.5), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_spark"]
+colors = PackedColorArray(1, 0.8, 0.3, 1, 1, 0.4, 0.1, 0)
+
+[node name="AkBullet" unique_id=138621825 instance=ExtResource("1_br1ca")]
 lifetime = 8.0
 
 [node name="Trail" parent="Node" parent_id_path=PackedInt32Array(950500505) index="0" unique_id=1522654685]
-position = Vector2(-13, 0)
-width = 25.0
-default_color = Color(0.50350213, 1.6465226, 1.5225757, 1)
-gradient = SubResource("Gradient_br1ca")
+position = Vector2(-8, 0)
+width = 18.0
+width_curve = SubResource("Curve_trail_width")
+default_color = Color(1, 0.5, 0.1, 1)
+gradient = SubResource("Gradient_trail")
 antialiased = true
-pointCount = 2
+pointCount = 5
 
-[node name="Visuals" type="Polygon2D" parent="." index="1" unique_id=2056701438]
-modulate = Color(0.43472764, 1.4369954, 1.3290025, 1)
-scale = Vector2(3.1796873, 3.1796875)
-color = Color(0.43472764, 1.4369954, 1.3290025, 1)
-antialiased = true
-polygon = PackedVector2Array(4, 0, -8, -3, -3.773956, 0, -8, 3)
+[node name="GlowOuter" type="Polygon2D" parent="." index="1" unique_id=490787483]
+modulate = Color(1, 0.4, 0.1, 0.3)
+scale = Vector2(5, 5)
+color = Color(1, 0.6, 0.2, 0.3)
+polygon = PackedVector2Array(6, 0, -2, -4, -4, 0, -2, 4)
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox" parent_id_path=PackedInt32Array(855520787) index="0" unique_id=1885055603]
-polygon = PackedVector2Array(13, 0, -25, -10, -25, 10)
+[node name="GlowMiddle" type="Polygon2D" parent="." index="2" unique_id=752304587]
+modulate = Color(1, 0.5, 0.15, 0.5)
+scale = Vector2(3.5, 3.5)
+color = Color(1, 0.6, 0.2, 0.5)
+polygon = PackedVector2Array(6, 0, -2, -4, -4, 0, -2, 4)
+
+[node name="CoreBright" type="Polygon2D" parent="." index="3" unique_id=1323305708]
+modulate = Color(3, 2, 0.8, 1)
+scale = Vector2(2.5, 2.5)
+color = Color(1, 0.9, 0.6, 1)
+polygon = PackedVector2Array(6, 0, -2, -3, -3, 0, -2, 3)
+
+[node name="CoreCenter" type="Polygon2D" parent="." index="4" unique_id=2133111797]
+modulate = Color(5, 4, 2, 1)
+scale = Vector2(1.5, 1.5)
+color = Color(1, 1, 0.9, 1)
+polygon = PackedVector2Array(5, 0, -1, -2, -2, 0, -1, 2)
+
+[node name="SparkTrail" type="CPUParticles2D" parent="." index="5" unique_id=2056033816]
+modulate = Color(4, 2, 0.5, 1)
+position = Vector2(-10, 0)
+amount = 20
+lifetime = 0.3
+randomness = 0.3
+emission_shape = 3
+emission_rect_extents = Vector2(2, 3)
+direction = Vector2(-1, 0)
+spread = 30.0
+gravity = Vector2(0, 50)
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+scale_amount_max = 3.0
+scale_amount_curve = SubResource("Curve_spark_scale")
+color_ramp = SubResource("Gradient_spark")
+
+[node name="CoreGlow" type="CPUParticles2D" parent="." index="6" unique_id=684777999]
+modulate = Color(5, 3, 1, 1)
+lifetime = 0.2
+randomness = 0.2
+emission_shape = 1
+emission_sphere_radius = 3.0
+direction = Vector2(-1, 0)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+scale_amount_min = 3.0
+scale_amount_max = 6.0
+scale_amount_curve = SubResource("Curve_spark_scale")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox" parent_id_path=PackedInt32Array(855520787) index="0" unique_id=967208375]
+polygon = PackedVector2Array(15, 0, -10, -8, -10, 8)

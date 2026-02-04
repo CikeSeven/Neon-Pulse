@@ -1,9 +1,9 @@
-[gd_scene format=3 uid="uid://cwr8s5ixft0io"]
+[gd_scene format=3 uid="uid://cuowhvgkcg70b"]
 
 [ext_resource type="PackedScene" uid="uid://df8dl6txho4t5" path="res://scene/enemy/enemy.tscn" id="1_enemy"]
 [ext_resource type="Script" uid="uid://cf4ql5dyi2ce4" path="res://script/enemy/charger.gd" id="2_charger"]
 
-[node name="Charger" unique_id=484942154 instance=ExtResource("1_enemy")]
+[node name="Berserker" instance=ExtResource("1_enemy")]
 script = ExtResource("2_charger")
 detection_range = 600.0
 windup_duration = 0.8
@@ -12,47 +12,45 @@ charge_color = Color(3, 1.5, 0.3, 1)
 speed = 100.0
 max_hp = 50.0
 contact_damage = 20.0
-exp_drop_chance = 1.0
-coin_drop_chance = 1.0
 
-[node name="GlowOuter" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="0" unique_id=2127843175]
+[node name="GlowOuter" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="0"]
 modulate = Color(1, 0.4, 0.07, 0.3)
 scale = Vector2(1.3, 1.3)
 color = Color(1, 0.4, 0.07, 0.3)
 polygon = PackedVector2Array(-75, 0, 15, -45, 45, -30, 45, 30, 15, 45)
 
-[node name="GlowInner" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="1" unique_id=1054588429]
+[node name="GlowInner" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="1"]
 modulate = Color(1, 0.4, 0.07, 0.5)
 scale = Vector2(1.15, 1.15)
 color = Color(1, 0.4, 0.07, 0.5)
 polygon = PackedVector2Array(-75, 0, 15, -45, 45, -30, 45, 30, 15, 45)
 
-[node name="Body" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="2" unique_id=185255659]
+[node name="Body" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="2"]
 modulate = Color(3, 1.2, 0.2, 1)
 color = Color(1, 0.4, 0.07, 1)
 polygon = PackedVector2Array(-75, 0, 15, -45, 45, -30, 45, 30, 15, 45)
 
-[node name="Spike" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="3" unique_id=924832419]
+[node name="Spike" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="3"]
 modulate = Color(4, 0.5, 0.1, 1)
 position = Vector2(-75, 0)
 color = Color(1, 0.17, 0.03, 1)
 polygon = PackedVector2Array(0, -22, -38, 0, 0, 22)
 
-[node name="CoreHighlight" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="4" unique_id=897890801]
+[node name="CoreHighlight" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="4"]
 modulate = Color(4, 2, 1, 1)
 scale = Vector2(0.4, 0.4)
 color = Color(1, 0.7, 0.4, 1)
 polygon = PackedVector2Array(-75, 0, 15, -45, 45, -30, 45, 30, 15, 45)
 
-[node name="Hurtbox" parent="." index="1" unique_id=1293090469]
+[node name="Hurtbox" parent="." index="1"]
 collision_layer = 32
 collision_mask = 0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hurtbox" index="0" unique_id=50753611]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hurtbox" index="0"]
 polygon = PackedVector2Array(-113, 0, 15, -45, 45, -30, 45, 30, 15, 45)
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox" parent_id_path=PackedInt32Array(1151360192) index="0" unique_id=1959091120]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox" parent_id_path=PackedInt32Array(1151360192) index="0"]
 polygon = PackedVector2Array(-113, 0, 15, -45, 45, -30, 45, 30, 15, 45)
 
-[node name="VisibleOnScreenNotifier2D" parent="." index="3" unique_id=1246620138]
+[node name="VisibleOnScreenNotifier2D" parent="." index="3"]
 rect = Rect2(-120, -55, 175, 110)

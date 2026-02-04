@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://cwn43po13e0o2"]
+
+[ext_resource type="PackedScene" uid="uid://df8dl6txho4t5" path="res://scene/enemy/enemy.tscn" id="1_0tml4"]
+[ext_resource type="Script" uid="uid://cydjl4buybbqe" path="res://script/enemy/drone.gd" id="2_drone"]
+
+[node name="Drone" unique_id=138867886 instance=ExtResource("1_0tml4")]
+script = ExtResource("2_drone")
+
+[node name="GlowOuter" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="0" unique_id=1351830703]
+modulate = Color(1, 0, 0.667, 0.3)
+scale = Vector2(1.3, 1.3)
+color = Color(1, 0, 0.667, 0.3)
+polygon = PackedVector2Array(-68, 0, 30, -54, 30, 54)
+
+[node name="GlowInner" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="1" unique_id=810724061]
+modulate = Color(1, 0, 0.667, 0.5)
+scale = Vector2(1.15, 1.15)
+color = Color(1, 0, 0.667, 0.5)
+polygon = PackedVector2Array(-68, 0, 30, -54, 30, 54)
+
+[node name="Body" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="2" unique_id=1309836112]
+modulate = Color(2.5, 0, 1.7, 1)
+color = Color(1, 0, 0.667, 1)
+polygon = PackedVector2Array(-68, 0, 30, -54, 30, 54)
+
+[node name="CoreHighlight" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="3" unique_id=1032639016]
+modulate = Color(3, 1.5, 2.5, 1)
+scale = Vector2(0.4, 0.4)
+color = Color(1, 0.6, 0.9, 1)
+polygon = PackedVector2Array(-68, 0, 30, -54, 30, 54)
+
+[node name="Hurtbox" parent="." index="1" unique_id=1293090469]
+collision_layer = 32
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hurtbox" index="0" unique_id=131895999]
+polygon = PackedVector2Array(-68, 0, 30, -54, 30, 54)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox" parent_id_path=PackedInt32Array(1151360192) index="0" unique_id=1648521968]
+polygon = PackedVector2Array(-68, 0, 30, -54, 30, 54)
+
+[node name="VisibleOnScreenNotifier2D" parent="." index="3" unique_id=1246620138]
+rect = Rect2(-75, -60, 120, 120)

@@ -29,9 +29,11 @@ var current_level: int = 1  ## 当前关卡
 var gold: int = 0
 var experience: int = 0  ## 当前经验（本级累计）
 var player_level: int = 1  ## 玩家等级
+var exp_range: float = 150.0  ## 经验吸引范围
+var coin_range: float = 150.0 ## 金币吸引范围
 
-# --- 世界滚动速度 ---
-var world_scroll_speed: float = 100.0  ## 掉落物向左移动的速度
+var world_scroll_speed: float = 100.0 ## 世界滚动速度
+
 
 func get_limit_left() -> float:
 	return -(screen_width * 0.45)
