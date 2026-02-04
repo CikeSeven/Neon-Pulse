@@ -5,6 +5,10 @@ class_name Enemy extends Node2D
 @export var max_hp: float = 30.0
 @export var contact_damage: float = 10.0 ## 敌人撞玩家造成的伤害
 
+@export_group("Loot")
+@export var is_elite: bool = false ## 是否为精英怪
+@export var exp_drop_chance: float = 0.6 ## 普通怪掉落经验概率 (0-1)
+
 @export_group("Hit Effects")
 @export var hit_flash_color: Color = Color(0.3, 2.0, 3.0, 1.0) ## 受击闪烁颜色（青色霓虹）
 @export var knockback_strength: float = 30.0 ## 击退强度
@@ -222,8 +226,36 @@ func die() -> void:
 	if hp_container:
 		hp_container.queue_free()
 
+	# 掉落经验
+	_drop_experience()
+
 	spawn_death_particles()
 	queue_free()
+
+## 掉落经验
+func _drop_experience() -> void:
+	var exp_orb_scene = load("res://scene/pickup/exp_orb.tscn")
+	if not exp_orb_scene:
+		return
+
+	var drop_count = 0
+
+	if is_elite:
+		# 精英怪：根据关卡掉落多个经验球
+		var current_level = Global.current_level
+		var min_drop = 1 + current_level / 3  # 最少1个，每3关+1
+		var max_drop = 2 + current_level / 2  # 最多2个，每2关+1
+		drop_count = randi_range(min_drop, max_drop)
+	else:
+		# 普通怪：有概率掉落0-1个
+		if randf() < exp_drop_chance:
+			drop_count = 1
+
+	# 生成经验球
+	for i in range(drop_count):
+		var exp_orb = exp_orb_scene.instantiate()
+		exp_orb.global_position = global_position
+		get_tree().current_scene.add_child(exp_orb)
 
 ## 生成死亡粒子
 func spawn_death_particles() -> void:

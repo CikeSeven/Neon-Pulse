@@ -139,14 +139,19 @@ func _on_hurtbox_hurt(attacker_hitbox: Hitbox) -> void:
 	if is_invincible:
 		return
 
-	# 计算伤害：怪物当前HP × 0.5 + 基础伤害
-	var damage = attacker_hitbox.damage
 	var attacker = attacker_hitbox.owner
 
+	# 普通敌人碰撞：玩家扣除敌人剩余血量，敌人死亡
 	if attacker is Enemy:
-		damage = attacker.current_hp * 0.5 + attacker.contact_damage
-
-	take_damage(damage)
+		var enemy_hp = attacker.current_hp
+		# 玩家扣除敌人剩余血量
+		take_damage(enemy_hp)
+		# 敌人也扣除同样的血量（即死亡）
+		attacker.take_damage(enemy_hp)
+	else:
+		# 非敌人攻击（如飞行物），使用默认伤害
+		var damage = attacker_hitbox.damage
+		take_damage(damage)
 
 ## 受伤处理
 func take_damage(amount: float) -> void:

@@ -14,7 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="Test Demo 1"
+config/name="Neon Pulse"
 run/main_scene="uid://cqf0du4og0s4m"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
