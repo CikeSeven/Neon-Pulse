@@ -11,6 +11,15 @@ track_color = Color(0.3, 2, 0.5, 1)
 speed = 180.0
 max_hp = 80.0
 contact_damage = 15.0
+hit_flash_color = Color(0.5, 3, 1, 1)
+hit_particle_color = Color(0.3, 2.5, 0.8, 1)
+hit_particle_amount = 15
+hit_particle_scale_min = 5.0
+hit_particle_scale_max = 10.0
+death_particle_color = Color(0.5, 3, 1, 1)
+death_particle_amount = 35
+death_particle_scale_min = 8.0
+death_particle_scale_max = 15.0
 
 [node name="GlowOuter" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="0" unique_id=304949893]
 modulate = Color(0, 1, 0.4, 0.25)

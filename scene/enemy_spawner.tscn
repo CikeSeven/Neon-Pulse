@@ -2,11 +2,13 @@
 
 [ext_resource type="Script" uid="uid://c2uwqn1845kbn" path="res://script/enemy/enemy_spawner.gd" id="1_hgipb"]
 [ext_resource type="PackedScene" uid="uid://cwn43po13e0o2" path="res://scene/enemy/drone.tscn" id="2_8dah6"]
+[ext_resource type="PackedScene" uid="uid://cuowhvgkcg70b" path="res://scene/enemy/berserker.tscn" id="3_1lo1l"]
 [ext_resource type="PackedScene" uid="uid://ox2xdtrjy2sj" path="res://scene/enemy/stalker.tscn" id="3_8dah6"]
+[ext_resource type="PackedScene" uid="uid://jsgkm5shoq0w" path="res://scene/enemy/gunner.tscn" id="4_1lo1l"]
 
 [node name="EnemySpawner" type="Node2D" unique_id=1308706498]
 script = ExtResource("1_hgipb")
-enemy_scenes = Array[PackedScene]([ExtResource("2_8dah6"), ExtResource("3_8dah6")])
+enemy_scenes = Array[PackedScene]([ExtResource("2_8dah6"), ExtResource("3_8dah6"), ExtResource("3_1lo1l"), ExtResource("4_1lo1l")])
 
 [node name="SpawnTimer" type="Timer" parent="." unique_id=365701904]
 wait_time = 4.0

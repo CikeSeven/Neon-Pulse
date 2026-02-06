@@ -13,6 +13,11 @@ shoot_angle = 60.0
 shoot_range = 800.0
 speed = 80.0
 contact_damage = 5.0
+hit_flash_color = Color(2.5, 0.5, 3, 1)
+hit_particle_color = Color(2, 0.3, 2.5, 1)
+hit_particle_amount = 10
+death_particle_color = Color(2.5, 0.5, 3, 1)
+death_particle_amount = 25
 
 [node name="GlowOuter" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="0" unique_id=134611915]
 modulate = Color(0.667, 0, 1, 0.25)

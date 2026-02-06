@@ -5,6 +5,9 @@
 
 [node name="Drone" unique_id=138867886 instance=ExtResource("1_0tml4")]
 script = ExtResource("2_drone")
+hit_flash_color = Color(3, 0.5, 2, 1)
+hit_particle_color = Color(2.5, 0.3, 1.7, 1)
+death_particle_color = Color(3, 0.5, 2.5, 1)
 
 [node name="GlowOuter" type="Polygon2D" parent="Visuals" parent_id_path=PackedInt32Array(1940419865) index="0" unique_id=1351830703]
 modulate = Color(1, 0, 0.667, 0.3)

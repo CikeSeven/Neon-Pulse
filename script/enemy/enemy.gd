@@ -16,6 +16,24 @@ class_name Enemy extends Node2D
 @export var knockback_strength: float = 30.0 ## 击退强度
 @export var hit_freeze_duration: float = 0.05 ## 受击顿帧时间
 
+@export_group("Hit Particles")
+@export var hit_particle_color: Color = Color(0.5, 2.0, 3.0, 1.0) ## 受击粒子颜色
+@export var hit_particle_amount: int = 12 ## 受击粒子数量
+@export var hit_particle_lifetime: float = 0.5 ## 受击粒子生命周期
+@export var hit_particle_scale_min: float = 4.0 ## 受击粒子最小尺寸
+@export var hit_particle_scale_max: float = 8.0 ## 受击粒子最大尺寸
+@export var hit_particle_velocity_min: float = 100.0 ## 受击粒子最小速度
+@export var hit_particle_velocity_max: float = 200.0 ## 受击粒子最大速度
+
+@export_group("Death Particles")
+@export var death_particle_color: Color = Color(0.5, 2.5, 4.0, 1.0) ## 死亡粒子颜色
+@export var death_particle_amount: int = 30 ## 死亡粒子数量
+@export var death_particle_lifetime: float = 0.8 ## 死亡粒子生命周期
+@export var death_particle_scale_min: float = 6.0 ## 死亡粒子最小尺寸
+@export var death_particle_scale_max: float = 12.0 ## 死亡粒子最大尺寸
+@export var death_particle_velocity_min: float = 150.0 ## 死亡粒子最小速度
+@export var death_particle_velocity_max: float = 350.0 ## 死亡粒子最大速度
+
 # --- 节点引用 ---
 @onready var hurtbox: Hurtbox = $Hurtbox
 @onready var hitbox: Hitbox = $Hitbox
@@ -177,26 +195,26 @@ func spawn_hit_particles() -> void:
 	particles.emitting = false
 	particles.one_shot = true
 	particles.explosiveness = 1.0
-	particles.amount = 12
-	particles.lifetime = 0.5
+	particles.amount = hit_particle_amount
+	particles.lifetime = hit_particle_lifetime
 
-	# 粒子外观 - 霓虹火花
-	particles.modulate = Color(0.5, 2.0, 3.0, 1.0)  # 青色霓虹
-	particles.scale_amount_min = 4.0
-	particles.scale_amount_max = 8.0
+	# 粒子外观
+	particles.modulate = hit_particle_color
+	particles.scale_amount_min = hit_particle_scale_min
+	particles.scale_amount_max = hit_particle_scale_max
 
 	# 粒子由大到小消散
 	var curve = Curve.new()
-	curve.add_point(Vector2(0.0, 1.0))  # 开始时满尺寸
-	curve.add_point(Vector2(0.7, 0.5))  # 中间缩小
-	curve.add_point(Vector2(1.0, 0.0))  # 结束时消失
+	curve.add_point(Vector2(0.0, 1.0))
+	curve.add_point(Vector2(0.7, 0.5))
+	curve.add_point(Vector2(1.0, 0.0))
 	particles.scale_amount_curve = curve
 
 	# 粒子运动
 	particles.direction = Vector2.ZERO
 	particles.spread = 180.0
-	particles.initial_velocity_min = 100.0
-	particles.initial_velocity_max = 200.0
+	particles.initial_velocity_min = hit_particle_velocity_min
+	particles.initial_velocity_max = hit_particle_velocity_max
 	particles.gravity = Vector2.ZERO
 	particles.damping_min = 200.0
 	particles.damping_max = 300.0
@@ -325,26 +343,26 @@ func spawn_death_particles() -> void:
 	particles.emitting = false
 	particles.one_shot = true
 	particles.explosiveness = 1.0
-	particles.amount = 30
-	particles.lifetime = 0.8
+	particles.amount = death_particle_amount
+	particles.lifetime = death_particle_lifetime
 
-	# 粒子外观 - 霓虹爆炸
-	particles.modulate = Color(0.5, 2.5, 4.0, 1.0)  # 亮青色
-	particles.scale_amount_min = 6.0
-	particles.scale_amount_max = 12.0
+	# 粒子外观
+	particles.modulate = death_particle_color
+	particles.scale_amount_min = death_particle_scale_min
+	particles.scale_amount_max = death_particle_scale_max
 
 	# 粒子由大到小消散
 	var curve = Curve.new()
-	curve.add_point(Vector2(0.0, 1.0))  # 开始时满尺寸
-	curve.add_point(Vector2(0.5, 0.6))  # 中间缩小
-	curve.add_point(Vector2(1.0, 0.0))  # 结束时消失
+	curve.add_point(Vector2(0.0, 1.0))
+	curve.add_point(Vector2(0.5, 0.6))
+	curve.add_point(Vector2(1.0, 0.0))
 	particles.scale_amount_curve = curve
 
 	# 粒子运动 - 向外爆炸
 	particles.direction = Vector2.ZERO
 	particles.spread = 180.0
-	particles.initial_velocity_min = 150.0
-	particles.initial_velocity_max = 350.0
+	particles.initial_velocity_min = death_particle_velocity_min
+	particles.initial_velocity_max = death_particle_velocity_max
 	particles.gravity = Vector2.ZERO
 	particles.damping_min = 150.0
 	particles.damping_max = 250.0
