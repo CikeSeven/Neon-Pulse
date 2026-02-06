@@ -16,6 +16,12 @@ extends CharacterBody2D
 @export var speed_x: float = 500
 @export var lane_change_duration: float = 0.30
 
+@export_group("Lane Impact FX")
+## 连续切轨时使用独立一次性粒子，避免上一段特效被restart打断
+@export var detached_lane_impact_fx: bool = true
+## 切轨特效分身销毁缓冲时间
+@export var lane_impact_cleanup_buffer: float = 0.20
+
 @export_group("Combat")
 @export var invincibility_duration: float = 1.0  ## 无敌帧持续时间
 
@@ -37,6 +43,7 @@ var original_color: Color            ## 原始颜色
 func _ready() -> void:
 	Global.player_ref = self
 	Global.reset_player_hp()
+	_configure_trail_particles()
 
 	# 保存原始颜色
 	if visuals:
@@ -97,6 +104,15 @@ func start_lane_tween(target_y: float, direction: int) -> void:
 	# 动画结束回调：重置状态
 	movement_tween.finished.connect(func(): is_changing_lane = false)
 
+func _configure_trail_particles() -> void:
+	# 使用世界坐标，粒子离开发射器后不再跟随玩家一起移动
+	if spark_trail:
+		spark_trail.local_coords = false
+	if core_glow:
+		core_glow.local_coords = false
+	if micro_sparks:
+		micro_sparks.local_coords = false
+
 # 核心逻辑：检测是否"撞"到了轨道线
 func check_impact() -> void:
 	if not is_changing_lane or impact_has_triggered:
@@ -118,20 +134,51 @@ func check_impact() -> void:
 
 # 触发爆炸特效
 func trigger_impact_visuals() -> void:
-	# 主火花爆发
-	impact_burst.restart()
-	impact_burst.emitting = true
+	if detached_lane_impact_fx:
+		_emit_detached_one_shot_particle(impact_burst)
+		_emit_detached_one_shot_particle(impact_flash)
+		_emit_detached_one_shot_particle(impact_ring)
+	else:
+		# 主火花爆发
+		impact_burst.restart()
+		impact_burst.emitting = true
 
-	# 中心闪光
-	impact_flash.restart()
-	impact_flash.emitting = true
+		# 中心闪光
+		impact_flash.restart()
+		impact_flash.emitting = true
 
-	# 扩散环
-	impact_ring.restart()
-	impact_ring.emitting = true
+		# 扩散环
+		impact_ring.restart()
+		impact_ring.emitting = true
 
 	# 屏幕震动
 	Global.request_screen_shake(8.0, 0.15)
+
+func _emit_detached_one_shot_particle(source: CPUParticles2D) -> void:
+	if not source:
+		return
+
+	var host: Node = get_tree().current_scene
+	if host == null:
+		host = get_parent()
+	if host == null:
+		return
+
+	var fx: CPUParticles2D = source.duplicate() as CPUParticles2D
+	if fx == null:
+		return
+
+	fx.emitting = false
+	fx.one_shot = true
+	fx.local_coords = false
+	host.add_child(fx)
+	fx.global_position = source.global_position
+	fx.global_rotation = source.global_rotation
+	fx.restart()
+	fx.emitting = true
+
+	var cleanup_delay: float = maxf(fx.lifetime + lane_impact_cleanup_buffer, 0.2)
+	get_tree().create_timer(cleanup_delay).timeout.connect(fx.queue_free)
 
 # 处理常规拖尾特效
 func update_visuals() -> void:
