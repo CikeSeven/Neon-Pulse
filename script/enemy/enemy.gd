@@ -13,6 +13,8 @@ class_name Enemy extends Node2D
 
 @export_group("Hit Effects")
 @export var hit_flash_color: Color = Color(0.3, 2.0, 3.0, 1.0) ## 受击闪烁颜色（青色霓虹）
+@export var hit_flash_duration: float = 0.15 ## 闪烁持续时间
+@export var hit_flash_recover_color: Color = Color.WHITE ## 闪烁结束后恢复颜色
 @export var knockback_strength: float = 30.0 ## 击退强度
 @export var hit_freeze_duration: float = 0.05 ## 受击顿帧时间
 
@@ -175,7 +177,6 @@ func take_damage(amount: float, knockback_dir: Vector2 = Vector2.RIGHT, knockbac
 ## 触发所有受击效果
 func trigger_hit_effects(knockback_dir: Vector2, knockback_amount: float) -> void:
 	flash_hit_effect()
-	spawn_hit_particles()
 	apply_knockback(knockback_dir, knockback_amount)
 	apply_hit_freeze()
 
@@ -187,45 +188,7 @@ func flash_hit_effect() -> void:
 	var tween = create_tween()
 	# 闪烁为霓虹青色
 	visuals.modulate = hit_flash_color
-	tween.tween_property(visuals, "modulate", Color.WHITE, 0.15).set_ease(Tween.EASE_OUT)
-
-## 生成受击粒子
-func spawn_hit_particles() -> void:
-	var particles = CPUParticles2D.new()
-	particles.emitting = false
-	particles.one_shot = true
-	particles.explosiveness = 1.0
-	particles.amount = hit_particle_amount
-	particles.lifetime = hit_particle_lifetime
-
-	# 粒子外观
-	particles.modulate = hit_particle_color
-	particles.scale_amount_min = hit_particle_scale_min
-	particles.scale_amount_max = hit_particle_scale_max
-
-	# 粒子由大到小消散
-	var curve = Curve.new()
-	curve.add_point(Vector2(0.0, 1.0))
-	curve.add_point(Vector2(0.7, 0.5))
-	curve.add_point(Vector2(1.0, 0.0))
-	particles.scale_amount_curve = curve
-
-	# 粒子运动
-	particles.direction = Vector2.ZERO
-	particles.spread = 180.0
-	particles.initial_velocity_min = hit_particle_velocity_min
-	particles.initial_velocity_max = hit_particle_velocity_max
-	particles.gravity = Vector2.ZERO
-	particles.damping_min = 200.0
-	particles.damping_max = 300.0
-
-	add_child(particles)
-	particles.position = Vector2.ZERO
-	particles.restart()
-	particles.emitting = true
-
-	# 自动清理
-	get_tree().create_timer(1.0).timeout.connect(particles.queue_free)
+	tween.tween_property(visuals, "modulate", hit_flash_recover_color, hit_flash_duration).set_ease(Tween.EASE_OUT)
 
 ## 击退效果（仅水平方向）
 func apply_knockback(direction: Vector2, knockback_amount: float) -> void:

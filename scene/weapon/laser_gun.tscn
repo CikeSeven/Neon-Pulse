@@ -1,7 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://d1kabimw2w3fc"]
+[gd_scene format=3 uid="uid://d1kabimw2w3fc"]
 
 [ext_resource type="PackedScene" uid="uid://bsk5loftgehxn" path="res://scene/weapon/weapon.tscn" id="1_swarl"]
+[ext_resource type="PackedScene" uid="uid://bjfdh3jnj32nl" path="res://scene/bullet/laser_bullet.tscn" id="2_3ev0g"]
 
-[node name="LaserGun" instance=ExtResource("1_swarl")]
-fire_rate = 0.2
-spread_angle = 0.0
+[node name="LaserGun" unique_id=1122951004 instance=ExtResource("1_swarl")]
+bullet_scene = ExtResource("2_3ev0g")
+fire_rate = 1.2

@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://cwmi8cpska54l"]
+
+[ext_resource type="Script" uid="uid://bw7qtlt6np1bi" path="res://script/weapon/melee_weapon.gd" id="1_melee"]
+[ext_resource type="Script" uid="uid://djf7d3bm237ab" path="res://script/Hitbox.gd" id="2_hitbox"]
+
+[sub_resource type="Gradient" id="Gradient_b0jnj"]
+offsets = PackedFloat32Array(0, 0.5103926, 1)
+colors = PackedColorArray(1, 1, 1, 0, 0.28, 1.25, 3, 1, 0.28, 1.25, 3, 1)
+
+[sub_resource type="Curve" id="Curve_j1ufp"]
+_data = [Vector2(0, 0.014902711), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_j1ufp"]
+offsets = PackedFloat32Array(0, 0.5103926, 1)
+colors = PackedColorArray(0.37182447, 0.37182447, 0.37182447, 0.37182447, 0.95, 1.3, 3.8, 1, 0.95, 1.3, 3.8, 1)
+
+[sub_resource type="Curve" id="Curve_b0jnj"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.9830148, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_melee"]
+size = Vector2(150, 56)
+
+[node name="MeleeWeapon" type="Node2D" unique_id=302260860]
+script = ExtResource("1_melee")
+slash_outer_width = 80.0
+slash_core_width = 40.0
+slash_outer_gradient = SubResource("Gradient_b0jnj")
+slash_outer_curve = SubResource("Curve_j1ufp")
+slash_core_gradient = SubResource("Gradient_j1ufp")
+slash_core_curve = SubResource("Curve_b0jnj")
+
+[node name="CooldownTimer" type="Timer" parent="." unique_id=479805499]
+
+[node name="SlashFx" type="Node2D" parent="." unique_id=884381314]
+z_index = 12
+
+[node name="SlashArc" type="Line2D" parent="SlashFx" unique_id=2045578718]
+visible = false
+width = 42.0
+texture_mode = 2
+joint_mode = 1
+begin_cap_mode = 1
+end_cap_mode = 1
+antialiased = true
+
+[node name="SlashArcCore" type="Line2D" parent="SlashFx" unique_id=1106904098]
+visible = false
+width = 20.0
+texture_mode = 2
+joint_mode = 1
+begin_cap_mode = 1
+end_cap_mode = 1
+antialiased = true
+
+[node name="SlashParticles" type="CPUParticles2D" parent="SlashFx" unique_id=1328043139]
+emitting = false
+amount = 52
+lifetime = 0.32
+randomness = 0.4
+emission_shape = 1
+emission_sphere_radius = 10.0
+spread = 34.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 180.0
+initial_velocity_max = 360.0
+scale_amount_min = 2.4
+scale_amount_max = 5.2
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=34090083]
+visible = false
+collision_layer = 0
+collision_mask = 32
+monitoring = false
+monitorable = false
+script = ExtResource("2_hitbox")
+metadata/_custom_type_script = "uid://djf7d3bm237ab"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=668603751]
+shape = SubResource("RectangleShape2D_melee")

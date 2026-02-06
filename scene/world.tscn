@@ -3,12 +3,11 @@
 [ext_resource type="PackedScene" uid="uid://bo43bt24peuwe" path="res://scene/player.tscn" id="1_pjass"]
 [ext_resource type="PackedScene" uid="uid://b2y28pdsel1dd" path="res://scene/enemy_spawner.tscn" id="2_txmk2"]
 [ext_resource type="Script" uid="uid://4xv1l5y5qa8f" path="res://script/camera.gd" id="3_camera"]
-[ext_resource type="PackedScene" uid="uid://c8h2j4k6m8n0p" path="res://scene/ui/player_hud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" uid="uid://clx7lsj5d3bgk" path="res://scene/ui/player_hud.tscn" id="4_hud"]
 
 [sub_resource type="Environment" id="Environment_pjass"]
 background_mode = 3
 glow_enabled = true
-glow_blend_mode = 0
 
 [sub_resource type="Curve" id="Curve_pjass"]
 _data = [Vector2(0, 0.0034325123), 0.0, 0.0, 0, 0, Vector2(0.16666666, 1), 0.0, 0.0, 0, 0, Vector2(0.6967213, 0.992563), 0.0, 0.0, 0, 0, Vector2(0.99453557, 0.0034325123), 0.0, 0.0, 0, 0]
@@ -62,4 +61,4 @@ scale_amount_curve = SubResource("Curve_pjass")
 [node name="EnemySpawner" parent="." unique_id=1308706498 instance=ExtResource("2_txmk2")]
 position = Vector2(0.5545654, 5.225708)
 
-[node name="PlayerHUD" parent="." instance=ExtResource("4_hud")]
+[node name="PlayerHUD" parent="." unique_id=1029903090 instance=ExtResource("4_hud")]

@@ -2,7 +2,7 @@ class_name Hitbox
 extends Area2D
 
 @export var damage: float = 5
-@export var knockback: float = 30.0 ## 击退强度
+@export var knockback: float
 
 signal hit(hurtbox: Hurtbox)
 

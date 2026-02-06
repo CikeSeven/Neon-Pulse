@@ -6,16 +6,13 @@ class_name WeaponManager extends Node2D
 const WEAPON_DB = {
 	1001: preload("res://scene/weapon/neon_ak.tscn"),
 	1002: preload("res://scene/weapon/laser_gun.tscn"),
+	1003: preload("res://scene/weapon/energy_blade.tscn"),
 	
 }
 
-# --- 武器槽位管理 ---
-# 定义武器围绕玩家的半径
-@export var orbit_radius: float = 60.0 
-
 func _ready() -> void:
-	# 测试用：游戏开始时自动送一把 AK
-	add_weapon(1001)
+	# TODO测试用
+	add_weapon(1002)
 
 # --- 核心函数：添加武器 ---
 func add_weapon(weapon_id: int) -> void:
@@ -30,30 +27,12 @@ func add_weapon(weapon_id: int) -> void:
 	# 2. 添加到自身节点下
 	add_child(new_weapon)
 	
-	# 3. 重新排列所有武器的位置 (形成环绕或其他阵型)
-	rearrange_weapons()
+	# 3. 刷新武器节点状态（不做环绕，仅用于持有/统计）
+	refresh_weapons()
 
-# --- 辅助函数：排列武器 ---
-# 当获得新武器时，自动重新计算所有武器的位置，避免重叠
-func rearrange_weapons() -> void:
+# --- 辅助函数：刷新武器节点 ---
+func refresh_weapons() -> void:
 	var weapons = get_children()
-	var count = weapons.size()
-	
-	if count == 0:
-		return
-		
-	# 简单的环绕排列算法：将所有武器均匀分布在圆周上
-	var step_angle = 2 * PI / count
-	
-	for i in range(count):
-		var weapon = weapons[i]
-		# 计算角度
-		var current_angle = i * step_angle
-		# 设置位置 (极坐标转笛卡尔坐标)
-		var target_pos = Vector2(cos(current_angle), sin(current_angle)) * orbit_radius
-		
-		# 直接设置位置，或者使用 Tween 做一个平滑移动效果
-		weapon.position = target_pos
-		
-		# 可选：让武器枪口朝外 (旋转武器)
-		weapon.rotation = current_angle
+	for weapon in weapons:
+		weapon.position = Vector2.ZERO
+		weapon.rotation = 0.0

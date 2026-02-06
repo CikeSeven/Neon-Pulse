@@ -6,7 +6,7 @@
 radius = 15.0
 
 [node name="Projectile" type="Area2D" unique_id=406886100]
-collision_layer = 0
+collision_layer = 64
 collision_mask = 8
 script = ExtResource("1_script")
 

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cs6pe7kjri511"]
+
+[ext_resource type="PackedScene" uid="uid://cwmi8cpska54l" path="res://scene/weapon/melee_weapon.tscn" id="1_r4g8x"]
+
+[node name="EnergyBlade" unique_id=1945458839 instance=ExtResource("1_r4g8x")]
+hitbox_size = Vector2(188, 66)
+particle_speed_max = 390.0

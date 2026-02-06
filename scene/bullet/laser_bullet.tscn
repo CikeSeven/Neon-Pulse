@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://bjfdh3jnj32nl"]
+
+[ext_resource type="PackedScene" uid="uid://bjxtkmvoqglyj" path="res://scene/bullet/bullet.tscn" id="1_8seux"]
+[ext_resource type="Script" uid="uid://cujiq1ea2n0lq" path="res://script/weapon/laser_bullet.gd" id="2_u6j7n"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yjxwl"]
+size = Vector2(120, 16)
+
+[node name="LaserBullet" unique_id=1099305981 instance=ExtResource("1_8seux")]
+script = ExtResource("2_u6j7n")
+speed = 1300.0
+damage = 10.0
+knockback = 8.0
+penetration_times = -1
+hit_effect_amount = 20
+hit_effect_lifetime = 0.3
+hit_effect_color = Color(6, 0.5, 0.5, 1)
+hit_effect_scale_min = 4.0
+hit_effect_scale_max = 6.0
+hit_effect_spread = 60.0
+hit_effect_speed_min = 120.0
+hit_effect_speed_max = 240.0
+hit_effect_angular_velocity_min = -120.0
+hit_effect_angular_velocity_max = 120.0
+
+[node name="Trail" parent="Node" parent_id_path=PackedInt32Array(950500505) index="0" unique_id=1522654685]
+process_mode = 4
+visible = false
+isSpawn = false
+
+[node name="GlowOuter" type="Polygon2D" parent="." index="1" unique_id=1985381235]
+modulate = Color(2.5, 0.2, 0.2, 0.38)
+color = Color(1, 0.2, 0.2, 0.4)
+polygon = PackedVector2Array(120, -6, 0, -6, 0, 6, 120, 6)
+
+[node name="GlowInner" type="Polygon2D" parent="." index="2" unique_id=121282623]
+modulate = Color(3.2, 0.3, 0.3, 0.72)
+color = Color(1, 0.12, 0.12, 0.82)
+polygon = PackedVector2Array(120, -3, 0, -3, 0, 3, 120, 3)
+
+[node name="Core" type="Polygon2D" parent="." index="3" unique_id=1507314722]
+modulate = Color(3.8, 0.5, 0.5, 1)
+color = Color(1, 0.05, 0.05, 0.95)
+polygon = PackedVector2Array(120, -3, 0, -3, 0, 3, 120, 3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" parent_id_path=PackedInt32Array(855520787) index="0" unique_id=1386708549]
+position = Vector2(60, 0)
+shape = SubResource("RectangleShape2D_yjxwl")

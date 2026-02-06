@@ -36,7 +36,7 @@ func spawn_projectile() -> void:
 	bullet.global_position = muzzle.global_position
 	
 	var random_spread = randf_range(-spread_angle, spread_angle)
-	bullet.rotation = global_rotation + deg_to_rad(random_spread)
+	bullet.rotation = deg_to_rad(random_spread)
 	
 	get_tree().current_scene.add_child(bullet)
 	play_shoot_effect()

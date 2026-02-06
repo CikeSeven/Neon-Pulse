@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://fmvxy1cn6xfv"]
 
 [ext_resource type="PackedScene" uid="uid://bjxtkmvoqglyj" path="res://scene/bullet/bullet.tscn" id="1_br1ca"]
+[ext_resource type="Script" uid="uid://d4bgi2ov0l5ff" path="res://script/weapon/ak_bullet.gd" id="2_7m3s3"]
 
 [sub_resource type="Curve" id="Curve_trail_width"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 0.8), 0.0, 0.0, 0, 0, Vector2(0.7, 0.4), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -18,7 +19,17 @@ point_count = 3
 colors = PackedColorArray(1, 0.8, 0.3, 1, 1, 0.4, 0.1, 0)
 
 [node name="AkBullet" unique_id=138621825 instance=ExtResource("1_br1ca")]
+script = ExtResource("2_7m3s3")
 lifetime = 8.0
+hit_effect_amount = 12
+hit_effect_lifetime = 0.25
+hit_effect_color = Color(4, 1.8, 0.4, 1)
+hit_effect_scale_min = 1.5
+hit_effect_scale_max = 3.0
+hit_effect_spread = 45.0
+hit_effect_speed_min = 90.0
+hit_effect_speed_max = 180.0
+hit_effect_cleanup_delay = 0.5
 
 [node name="Trail" parent="Node" parent_id_path=PackedInt32Array(950500505) index="0" unique_id=1522654685]
 position = Vector2(-8, 0)
